@@ -2,12 +2,13 @@
 #
 # To get started with Nuxt see: https://nuxtjs.org/docs/get-started/installation
 #
-name: Deploy Nuxt site to Pages
+name: Confirm Build
 
 on:
   # Runs on pushes targeting the default branch
-  push:
-    branches: ["master"]
+  pull_request:
+    types: ["opened", "reopened", "edited"]
+    branches: ["dev"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
