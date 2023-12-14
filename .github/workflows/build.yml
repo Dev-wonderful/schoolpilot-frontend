@@ -2,13 +2,13 @@
 #
 # To get started with Nuxt see: https://nuxtjs.org/docs/get-started/installation
 #
-name: Deploy Nuxt site to Pages
+name: Confirm Build
 
 on:
   # Runs on pushes targeting the default branch
   pull_request:
     types: ["opened", "reopened", "edited"]
-    branches: ["master"]
+    branches: ["dev"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -77,15 +77,3 @@ jobs:
         uses: actions/upload-pages-artifact@v2
         with:
           path: ./dist
-
-  # Deployment job
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v3
