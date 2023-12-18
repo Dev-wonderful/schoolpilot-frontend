@@ -27,6 +27,7 @@
 .sidebar {
   grid-area: sidebar;
   height: 100%;
+  overflow-y: auto;
 }
 .main {
   grid-area: main;
