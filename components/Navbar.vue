@@ -5,7 +5,7 @@
 </script>
 
 <template>
-  <nav class="bg-white border-none shadow-md rounded-lg mx-auto mr6">
+  <nav class="bg-white border-none shadow-md rounded-lg mx-auto">
     <div class="flex items-center justify-between px-4 py-2">
       <div class="flex items-center relative">
         <input type="text" class="rounded-lg shadow-md w-32 md:w-52 lg:w-72 h-10 placeholder:text-start placeholder:pr-6 placeholder:text-xl focus:outline-none p-2" placeholder="search">
