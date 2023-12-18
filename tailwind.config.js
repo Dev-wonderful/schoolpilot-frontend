@@ -1,19 +1,27 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
-  content: [],
+export default {
+  content: [
+     "./components/**/*.{js,vue,ts}",
+    "./layouts/**/*.vue",
+    "./pages/**/*.vue",
+    "./plugins/**/*.{js,ts}",
+    "./app.vue",
+    "./error.vue",
+  ],
   theme: {
     extend: {
+      colors: {
+        primary: '#925FE2',
+      },
       container: {
-        center: true,
         padding: {
           DEFAULT: '1rem',
           sm: '2rem',
-          lg: '4rem',
-          xl: '5rem',
-          '2xl': '6rem',
-        }
-      }
+          lg: '2rem',
+        },
     },
+    }
+    
   },
   plugins: [],
 }
