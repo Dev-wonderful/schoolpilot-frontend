@@ -1,14 +1,16 @@
 type requestMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
 
-export const errorHandler = (error: globalThis.Ref<Error | null>) => {
+export const useErrorHandler = (error: globalThis.Ref<Error | null>) => {
     // This would be responsible for displaying an alert
     // for now just console log the error
     console.error(error.value)
 }
 
-export const makeRequest = async (request: string, method: requestMethod = 'GET') => {
+export const useMakeRequest = async (request: string, method: requestMethod = 'GET') => {
+    // console.log("called")
     const baseUrl = ''
-    console.log('request:', request)
+    // request = toValue(request)
+    // method = toValue(method)
     const { data, error } = await useAsyncData(
         request, 
         () => $fetch(`${baseUrl + request}`, {

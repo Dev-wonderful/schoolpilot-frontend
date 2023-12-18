@@ -31,6 +31,13 @@
 }
 .main {
   grid-area: main;
+  height: 90vh;
+  width: 100%;
+  overflow-y: scroll;
+  scrollbar-width: none; /* Mozilla Firefox */
+}
+.main::-webkit-scrollbar {
+  display: none;
 }
 </style>
 
