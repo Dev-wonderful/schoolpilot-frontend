@@ -8,11 +8,8 @@
 
   let dashboardStore = useDashboardUpdateStore()
   const { name, role, idNumber, infoUpdates } = storeToRefs(dashboardStore)
-  console.log('name:', name.value)
   if (role.value && idNumber.value && infoUpdates.value.length === 0) {
-    console.log("in here fg")
     const requestEndpoint = `/api/v1/dashboard?role=${role.value}&id=${idNumber.value}`
-    console.log('request', requestEndpoint)
     const { data, error } = await makeRequest(requestEndpoint) as Response
     if (error.value) infoUpdates.value = [];
     else infoUpdates.value = data.value
