@@ -5,7 +5,15 @@ export const useDashboardUpdateStore = defineStore('dashboardUpdate', () => {
     const name: globalThis.Ref<null | string> = ref('<firstname lastname>');
     const idNumber: globalThis.Ref<null | string> = ref('12345')
     const role: globalThis.Ref<null | string> = ref('student');
+    const avatar: globalThis.Ref<null | string> = ref(null)
     const infoUpdates: globalThis.Ref<UpdateType[] | []> = ref([])
 
-    return { name, role, idNumber, infoUpdates }
-}, { persist: true })
+    return { name, role, idNumber, infoUpdates, avatar }
+}, 
+{  
+    persist: {
+        storage: persistedState.cookiesWithOptions({
+            maxAge: 10,
+        }),
+    }, 
+})
