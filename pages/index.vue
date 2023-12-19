@@ -9,7 +9,6 @@
   let dashboardStore = useDashboardUpdateStore()
   const { name, role, idNumber, infoUpdates } = storeToRefs(dashboardStore)
   if (role.value && idNumber.value && infoUpdates.value.length === 0) {
-    // console.log("in here")
     const requestEndpoint = `/api/v1/dashboard?role=${role.value}&id=${idNumber.value}`
     const { data, error } = await useMakeRequest(requestEndpoint) as Response
     if (error.value) infoUpdates.value = [];
@@ -22,27 +21,10 @@
   }
   // console.log(dashboardStore)
   
-  const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-  const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-  const time_postfix = ["am", "pm"];
   
   const convertDatetimeString = (datetimeString: string) => {
-    const date = new Date(datetimeString)
-    const dayOfMonth: number =  date.getDate()
-    const month: string = months[date.getMonth()]
-    const year: number = date.getFullYear()
-    let hours: number = date.getHours()
-    // return 0 for AM or 1 for PM
-    const postfix = Math.floor(hours / 12);
-    hours = hours % 12;
-    if (hours === 0) hours = 12;
-    // process the minutes to add 0 to the minutes less than 10
-    // minutes less than 10 would be missing a second digit,
-    // thereby displaying 3:2AM instead of 3:02AM
-    const minutes: number = date.getMinutes()
-    let minutes_str: string = String(minutes);
-    if (minutes < 10) minutes_str = "0" + String(minutes);
-    return `${hours}:${minutes_str + time_postfix[postfix]} on ${dayOfMonth}th of ${month}, ${year}`
+    const formatted = useDateFormat(datetimeString, 'h:mma on Mo of MMMM YYYY')
+    return formatted.value
   }
 </script>
 

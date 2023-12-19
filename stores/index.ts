@@ -9,11 +9,4 @@ export const useDashboardUpdateStore = defineStore('dashboardUpdate', () => {
     const infoUpdates: globalThis.Ref<UpdateType[] | []> = ref([])
 
     return { name, role, idNumber, infoUpdates, avatar }
-}, 
-{  
-    persist: {
-        storage: persistedState.cookiesWithOptions({
-            maxAge: 10,
-        }),
-    }, 
 })
