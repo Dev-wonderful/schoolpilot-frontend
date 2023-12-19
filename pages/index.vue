@@ -26,12 +26,16 @@
     const formatted = useDateFormat(datetimeString, 'h:mma on Mo of MMMM YYYY')
     return formatted.value
   }
+  const navigate = (dateString: string, title: string = '') => {
+    const formattedDate = useDateFormat(dateString, 'D-MMMM-YYYY')
+    navigateTo(`/schedules/${formattedDate.value}/${title}`)
+  }
 </script>
 
 <template>
   <section class="md:container">
     <section class="dashboard flex flex-col justify-around items-center w-[100%] min-h-[750px] gap-5 bg-prple-300 mx-auto my-[50px]">
-      <div class="welcome shadow-md rounded-[20px] w-[90%] sm:w-[95%] h-[200px] flex flex-row justify-around items-center bg-blu-200">
+      <div class="welcome shadow-md rounded-[20px] bg-primary text-white w-[90%] sm:w-[95%] h-[200px] flex flex-row justify-around items-center bg-blu-200">
         <h1 class="welcome_text w-[60%] h-[50%] text-left leading-[20px] md:leading-[100px] bg-rd-100 sm:text-[1.2rem]">
           Hello {{ name }}
         </h1>
@@ -42,7 +46,8 @@
           <h2 class="update_heading_text" :class="dashboardinfoStyles.infoHeading">
             {{ update.title }}
           </h2>
-          <div class="update_content" :class="dashboardinfoStyles.infoContent" v-for="datum of update.data">
+          <div class="update_content cursor-pointer" :class="dashboardinfoStyles.infoContent" 
+               v-for="datum of update.data" @click="navigate(datum.scheduledTime, datum.title)">
             <span class="w-[95%] bg-ble-200 px-1 truncate text-left mx-auto">{{ datum.title }}</span>
             <span class="w-[95%] bg-rd-200 px-1 truncate mx-auto" :title="convertDatetimeString(datum.scheduledTime)">
               {{ convertDatetimeString(datum.scheduledTime) }}
