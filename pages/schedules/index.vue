@@ -42,9 +42,9 @@
 </script>
 <template>
     <div class="current_month w-[87%] h-8 text-lg bg-primary rounded-md text-white mt-3 mx-auto text-center flex flex-row justify-around items-center px-auto">
-        <span class="left_arrow">left arrow</span>
+        <span class="left_arrow"><i class="fa fa-chevron-left"></i></span>
         {{ current_month }}
-        <span class="right_arrow">right arrow</span>
+        <span class="right_arrow"><i class="fa fa-chevron-right"></i></span>
     </div>
     <section class="schedule_calendar text-black bg-white grid grid-cols-7 grid-rows-6 w-[90%] h-[700px] px-6 py-6 gap-2 mx-auto mb-7 justify-center items-center">
         <div class="days text-center leading-normal bg-primary text-white rounded-md" v-for="day of days">{{ day }}</div>

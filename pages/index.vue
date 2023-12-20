@@ -16,7 +16,7 @@
   }
   const dashboardinfoStyles = {
     infoBox: 'mx-auto max-w[350px] w-[400px] h-[350px] rounded-2xl shadow-md grid grid-rows-5 grid-cols-1 justify-center items-center',
-    infoHeading: 'text-center md:text-[1.5rem] text-[1.2rem] shadow-sm h-[100%] w-[100%] mx-auto leading-[60px] text-[whitesmoke] bg-primary rounded-2xl',
+    infoHeading: 'text-center md:text-[1.5rem] text-[1.2rem] shadow-sm h-[100%] w-[90%] sm:w-[100%] mx-auto leading-[60px] text-[whitesmoke] bg-primary rounded-2xl',
     infoContent: 'grid grid-cols-2 grid-rows-1 text-center text-[1rem] shadow-sm h-[100%] w-[90%] mx-auto leading-[60px] rounded-2xl'
   }
   // console.log(dashboardStore)
@@ -33,10 +33,10 @@
 </script>
 
 <template>
-  <section class="md:container">
+  <section class="md:container mx-auto">
     <section class="dashboard flex flex-col justify-around items-center w-[100%] min-h-[750px] gap-5 bg-prple-300 mx-auto my-[50px]">
       <div class="welcome shadow-md rounded-[20px] bg-primary text-white w-[90%] sm:w-[95%] h-[200px] flex flex-row justify-around items-center bg-blu-200">
-        <h1 class="welcome_text w-[60%] h-[50%] text-left leading-[20px] md:leading-[100px] bg-rd-100 sm:text-[1.2rem]">
+        <h1 class="welcome_text w-[60%] h-[50%] text-left flex flex-col justify-center items-start bg-rd-100 sm:text-[1.2rem]">
           Hello {{ name }}
         </h1>
         <div class="image-container w-[100px] h-[100px] sm:w-[130px] sm:h-[130px] md:w-[150px] md:h-[150px] bg-gray-300 rounded-[20px]"></div>

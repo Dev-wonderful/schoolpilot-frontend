@@ -24,9 +24,9 @@
       </NuxtLink>
 
       <div class="pr-4">
-        <span class="fas fa-bell relative w-6">
-          <span class="notification_dot absolute top-0 right-2 bg-red-500 text-[10px] w-3 h-3 text-center text-white leading-3 rounded-full">
-            10
+        <span class="fas fa-bell fa-2x relative bg-blue50">
+          <span class="notification_dot absolute top-1 right-1 bg-red-500 text-[10px] font-bold w-4 h-4 text-center text-white leading-4 rounded-full">
+            9+
           </span>
         </span>
       </div>     
