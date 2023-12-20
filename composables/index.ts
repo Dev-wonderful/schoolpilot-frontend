@@ -9,8 +9,8 @@ export const useErrorHandler = (error: globalThis.Ref<Error | null>) => {
 export const useMakeRequest = async (request: string, method: requestMethod = 'GET') => {
     // console.log("called")
     const baseUrl = ''
-    // request = toValue(request)
-    // method = toValue(method)
+    request = toValue(request)
+    method = toValue(method)
     const { data, error } = await useAsyncData(
         request, 
         () => $fetch(`${baseUrl + request}`, {
