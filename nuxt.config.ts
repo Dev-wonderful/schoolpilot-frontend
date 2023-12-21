@@ -14,4 +14,8 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
+  routeRules: {
+    // Homepage pre-rendered at build time
+    '/schedule/**': { ssr: false },
+  }
 })
