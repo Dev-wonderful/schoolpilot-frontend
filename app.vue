@@ -8,7 +8,7 @@
 
 <script setup lang="ts">
 useHead({
-  title: 'My App',
+  title: 'School Pilot',
   meta: [
     { name: 'description', content: 'Shool Management WebApp.' },
     {name: 'viewport', content: 'width=device-width, initial-scale=1' },
