@@ -1,16 +1,11 @@
 <script lang="ts" setup>
-  import { type UpdateType } from "~/types";
-  
-  interface Response {
-    data: globalThis.Ref<UpdateType[]>,
-    error: globalThis.Ref<Error | null>
-  }
+  import { type UpdateType, type ResponseType } from "~/types";
 
   let dashboardStore = useDashboardUpdateStore()
   const { name, role, idNumber, infoUpdates } = storeToRefs(dashboardStore)
   if (role.value && idNumber.value && infoUpdates.value.length === 0) {
     const requestEndpoint = `/api/v1/dashboard?role=${role.value}&id=${idNumber.value}`
-    const { data, error } = await useMakeRequest(requestEndpoint) as Response
+    const { data, error } = await useMakeRequest(requestEndpoint) as ResponseType<UpdateType[]>
     if (error.value) infoUpdates.value = [];
     else infoUpdates.value = data.value
   }
@@ -23,12 +18,15 @@
   
   
   const convertDatetimeString = (datetimeString: string) => {
-    const formatted = useDateFormat(datetimeString, 'h:mma on Mo of MMMM YYYY')
+    const date = new Date(datetimeString)
+    const formatted = useDateFormat(date, 'h:mma on Do of MMMM YYYY')
     return formatted.value
   }
   const navigate = (dateString: string, title: string = '') => {
-    const formattedDate = useDateFormat(dateString, 'D-MMMM-YYYY')
-    navigateTo(`/schedules/${formattedDate.value}/${title}`)
+    console.log(dateString)
+    const formattedDateArr = useDateFormat(dateString, 'D-MMMM-YYYY').value.split('-')
+    const monthAndYear = formattedDateArr.splice(1, 2).join('-')
+    navigateTo(`/schedules/${monthAndYear}/${formattedDateArr[0]}/${title}?time=${dateString}`)
   }
 </script>
 

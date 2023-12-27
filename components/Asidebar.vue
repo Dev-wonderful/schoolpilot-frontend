@@ -8,29 +8,34 @@
         </div>
 
       </div>
-        <div class="text-white inline-flex flex-col justify-center items-start gap-4 space-y-8">
-          <NuxtLink @click="closeMenu" to="/" class="dashboardlink flex items-center gap-2 justify-center">
+        <div class="text-gray-300 inline-flex flex-col justify-center items-start gap-4 space-y-8">
+          <NuxtLink @click="closeMenu" to="/" class="dashboardlink flex hover:text-white items-center gap-2 justify-center">
             <img src="/assets/images/dashboard.png" alt="Dashboard" />
+            <!-- <i class="fa-solid guage"></i> -->
             <span>Dashboard</span>
           </NuxtLink>
-          <NuxtLink @click="closeMenu" to="/registration" class="dashboardlink flex items-center gap-2 justify-center">
-            <img src="/assets/images/contacts-alt.png" alt="Registration" />
+          <NuxtLink @click="closeMenu" to="/registration" class="registrationlink hover:text-white flex items-center gap-2 justify-center">
+            <!-- <img src="/assets/images/contacts-alt.png" alt="Registration" /> -->
+            <i class="fa fa-edit fa-lg"></i>
             <span>Registration</span>
           </NuxtLink>
-          <NuxtLink @click="closeMenu" to="/courses" class="dashboardlink flex items-center gap-2 justify-center">
-            <img src="/assets/images/notebook.png" alt="Courses" />
+          <NuxtLink @click="closeMenu" to="/courses" class="courseslink hover:text-white flex items-center gap-2 justify-center">
+            <!-- <img src="/assets/images/notebook.png" alt="Courses" /> -->
+            <i class="fa fa-book fa-lg"></i>
             <span>Courses</span>
           </NuxtLink>
-          <NuxtLink @click="closeMenu" to="/assignments" class="dashboardlink flex items-center gap-2 justify-center">
-            <img src="/assets/images/notebook.png" alt="Assignments" />
+          <NuxtLink @click="closeMenu" to="/assignments" class="assignmentslink hover:text-white flex items-center gap-2 justify-center">
+            <!-- <img src="/assets/images/notebook.png" alt="Assignments" /> -->
+            <i class="fa fa-briefcase fa-lg"></i>
             <span>Assignments</span>
           </NuxtLink>
-          <NuxtLink @click="closeMenu" to="/schedules" class="dashboardlink flex items-center gap-2 justify-center">
-            <img src="/assets/images/contacts-alt.png" alt="Schedules" />
+          <NuxtLink @click="closeMenu" to="/schedules" class="scheduleslink hover:text-white flex items-center gap-2 justify-center">
+            <!-- <img src="/assets/images/contacts-alt.png" alt="Schedules" /> -->
+            <i class="fa fa-calendar fa-lg"></i>
             <span>Schedules</span>
           </NuxtLink>
-          <NuxtLink @click="closeMenu" to="/settings" class="dashboardlink flex items-center gap-2 justify-center">
-            <img src="/assets/images/dashboard.png" alt="Settings" />
+          <NuxtLink @click="closeMenu" to="/settings" class="settingslink hover:text-white flex items-center gap-2 justify-center">
+            <i class="fa fa-cog fa-lg"></i>
             <span>Settings</span>
           </NuxtLink>
         </div>
@@ -40,11 +45,11 @@
 
 <style scoped>
 /* Add any additional styling as needed */
-.dashboardlink img {
+/* .dashboardlink img {
   max-width: 40px;
   max-height: 40px;
   margin-bottom: 8px;
-}
+} */
 
 </style>
 

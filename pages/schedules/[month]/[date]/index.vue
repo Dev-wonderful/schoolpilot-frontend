@@ -1,0 +1,134 @@
+<script lang="ts" setup>
+    import type { ScheduleType, ScheduleObjType } from '~/types'
+    const route = useRoute()
+    const monthParams = route.params.month as string
+    const dayParams = route.params.date as string
+    const dateParams = `${dayParams}-${monthParams}`
+    const { scheduleData } = storeToRefs(useScheduleStore())
+    console.log(scheduleData.value)
+    const SCHEDULE = computed(() => {
+        const processedDateSchedule = []
+        if (monthParams in scheduleData.value) {
+            for (let monthData of scheduleData.value[monthParams]) {
+                const day = useDateFormat(monthData.scheduledTime, 'D');
+                if (+day.value === +dayParams) processedDateSchedule.push(monthData)
+            }
+        }
+        return processedDateSchedule
+    })
+    // console.log(dateParams)
+    // const FUTURE = ref(2);
+    // const scheduleStore = useScheduleStore()
+    // const MONTHDAYS = computed(() => {
+    //     return storeToRefs(scheduleStore).daysInMonth.value
+    // })
+    const breakpoints = useBreakpoints({
+        mobile: 300,
+        sm:	640,
+        md:	768,	
+        lg:	1024,	
+        xl:	1280,
+        xxl: 1536,
+    });
+    // assign the breakpoints to a variable to prevent the error that comes from
+    // using a vueuse composable inside of template
+    const largeWidth = breakpoints.lg;
+    const mediumWidth = breakpoints.md;
+    // const smallWidth = breakpoints.sm;
+    // const mobileWidth = breakpoints.mobile;
+    const OFFSET = computed(() => {
+        if(largeWidth.value) return 3
+        else if(mediumWidth.value) return 2
+        // else if(mobileWidth) return 1
+        else return 1
+    });
+    const FUTURE = computed(() => {
+        if(largeWidth.value) return 3
+        else if(mediumWidth.value) return 2
+        // else if(mobileWidth) return 1
+        else return 1
+    });
+
+
+
+    const previousDay = (offset: number = 1) => {
+        const date = new Date(dateParams)
+        let dateDay = date.getDate();
+        date.setDate(dateDay - offset);
+        return useDateFormat(date, 'D MMMM YYYY').value
+    }
+    const nextDay = (future: number = 1) => {
+        const date = new Date(dateParams);
+        const dateDay = date.getDate();
+        date.setDate(dateDay + future);
+        return useDateFormat(date, 'D MMMM YYYY').value;
+    }
+
+    function* generateDate() {
+        // console.log('OFFSET:', OFFSET.value)
+        let i = 0;
+        let offset = OFFSET.value;
+        let future = 1;
+        let actualDate = true
+        while(i <= (OFFSET.value + FUTURE.value)) {
+            if (offset) {
+                // offset--;
+                yield previousDay(offset--)
+            } else if (actualDate) {
+                actualDate = false
+                yield dateParams.split('-').join(' ')
+            } else if (future <= FUTURE.value) {
+                yield nextDay(future++)
+            }
+            i++
+        }
+    }
+    // console.log(dateParams.split('-').join(' ') === '2 December 2023')
+    
+    const splitDayValues = (dateString: string) => {
+        return dateString.split(' ')
+    };
+
+    // const breakpointsDynamics = breakpoints.lg
+    const navigate = (dateString: string) => {
+        // process and navigate to a route
+        const dateArr = dateString.split(' ');
+        const monthAndYear = dateArr.splice(1, 2).join('-');
+        navigateTo(`/schedules/${monthAndYear}/${dateArr[0]}`)
+    }
+    const formatTime = (dateString: string) => {
+        return useDateFormat(dateString, 'h:mma').value
+    }
+</script>
+<template>
+    <section class="md:container mx-auto flex flex-col justify-between h-fit gap-14 mb-6">
+        <section class="seven-days grid grid-rows-1 text-[14px] md:text-[13px] w-[90%]
+                     bg-blue50 min-h-[17vw] sm:min-h-[70px] gap-2 mt-8 mx-auto justify-center items-center"
+                 :class="largeWidth ? 'grid-cols-9' : mediumWidth ? 'grid-cols-7' : 'grid-cols-5' ">
+            <i class="fa fa-chevron-left fa-2x bg-red50 text-center text-primary cursor-pointer" 
+               @click="navigate(previousDay())"></i>
+            <div class="month_days w-[100%] h-[100%] flex flex-col px-1 cursor-pointer justify-around shadow-md rounded-md" 
+                 v-for="day of generateDate()" :class="dateParams.split('-').join(' ') === day ? 'bg-primary text-white' : '' "
+                 @click="navigate(day)">
+                <div class="w-[100%] text-center">
+                    {{ splitDayValues(day)[0] }}
+                </div>
+                <div class="w-[100%] text-center">
+                <!-- {{ splitDayValues(day).splice(1, 2).join(' ') }} -->
+                {{ largeWidth ? splitDayValues(day)[1] : splitDayValues(day)[1].slice(0,3) }}
+                {{ splitDayValues(day)[2] }}
+                </div>
+            </div>
+            <i class="fa fa-chevron-right fa-2x bg-red50 text-center text-primary cursor-pointer" 
+               @click="navigate(nextDay())"></i>
+        </section>
+        <section class="date_schedule_content grid grid-cols-1 gap-3 bg-prple-50  w-[90%] leading-[50px]  mx-auto justify-center items-center">
+            <div class="schedule_content grid h-14 bg-[whitesmoke] grid-cols-6 px-4 rounded-md shadow-md cursor-pointer"
+                 @click="navigateTo(`${dayParams}/${schedule.title}?time=${schedule.scheduledTime}`)" v-for="schedule of SCHEDULE">
+                <div class="time grid col-span-2 sm:col-span-1 w-full h-full">{{ formatTime(schedule.scheduledTime) }}</div>
+                <div class="description col-span-4 sm:col-span-5 truncate w-full h-full bg-slte-300">{{ schedule.title }}</div>
+            </div>
+            
+        </section>
+    </section>
+</template>
