@@ -48,12 +48,9 @@
 
 </style>
 
-<script>
-export default {
-  methods: {
-    closeMenu() {
-      this.$emit('close-menu');
-    },
-  },
+<script setup>
+const emit = defineEmits(['close-menu'])
+const closeMenu = () => {
+  emit('close-menu');
 };
 </script>
