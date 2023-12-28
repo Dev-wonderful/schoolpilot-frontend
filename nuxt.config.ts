@@ -15,7 +15,7 @@ export default defineNuxtConfig({
     },
   },
   routeRules: {
-    // Homepage pre-rendered at build time
+    // Homepage 
     '/schedule/**': { ssr: false },
   }
 })

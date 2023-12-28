@@ -1,5 +1,5 @@
 export default defineEventHandler((event) => {
-    // created to test store and statement maanagement and also to mock a network call
+    // created to test store and state management and also to mock a network call
     interface UpdateType {
         title: string,
         data: {title: string, scheduledTime: string}[]
@@ -10,8 +10,8 @@ export default defineEventHandler((event) => {
           title: 'Pending Assignments',
           data: [
             {title: 'C++ Enums', scheduledTime: '2023-12-16T00:00:10.789'},
-            {title: 'C++ Functions', scheduledTime: '2023-12-16T13:27:10.789'},
-            {title: 'C++ Classes', scheduledTime: '2023-12-16T13:27:10.789'},
+            {title: 'C++ Functions', scheduledTime: '2023-11-12T13:27:10.789'},
+            {title: 'C++ Classes', scheduledTime: '2023-12-26T13:27:10.789'},
             {title: 'C++ Structs', scheduledTime: '2023-12-16T13:27:10.789'},
             {title: 'C++ Datatypes', scheduledTime: '2023-12-16T13:27:10.789'},
           ]
