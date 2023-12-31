@@ -1,15 +1,11 @@
 <script lang="ts" setup>
     const route = useRoute()
     const pathParams = route.params
-    console.log(pathParams)
     const { month, date, title } = pathParams
     const { time } = route.query
     const formattedDate = useDateFormat(`${date}-${month}` as string, 'Do of MMMM YYYY')
     const formattedTime = useDateFormat(time as string, 'h:mma')
     const status = useTimeAgo(time as string)
-    console.log('formattedDate:', formattedDate.value)
-    console.log(status.value)
-    console.log(time)
 </script>
 
 <template>
@@ -27,7 +23,7 @@
                     <p class="px-4 w-full shadow-inner h-10 leading-10 text-sm rounded-md">{{ status }}</p>
                 </div>
                 <div class="time w-full"><span>Description</span> 
-                    <p class="px-4 w-full shadow-inner h-24 leading-10 text-sm rounded-md">{{  }}</p>
+                    <textarea class="px-4 w-full shadow-inner h-24 leading-10 text-sm rounded-md" disabled>{{  }}</textarea>
                 </div>
                 
             </section>

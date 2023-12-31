@@ -21,7 +21,7 @@ export default defineEventHandler((event) => {
         'November-2023': [
             {title: 'C++ Enums', scheduledTime: '2023-11-16T00:00:10.789'},
             {title: 'C++ Functions', scheduledTime: '2023-11-12T13:27:10.789'},
-            {title: 'C++ Classes', scheduledTime: '2023-11-26T13:27:10.789'},
+            {title: 'C++ Inheritance', scheduledTime: '2023-11-26T13:27:10.789'},
             {title: 'C++ Structs', scheduledTime: '2023-11-16T13:27:10.789'},
             {title: 'C++ Datatypes', scheduledTime: '2023-11-16T13:27:10.789'},
             {title: 'Read Biology', scheduledTime: '2023-11-16T16:35:10.789'},
@@ -32,9 +32,9 @@ export default defineEventHandler((event) => {
         ]
     }
     // const returnData: ScheduleType = {};
-    if (month) {
+    if (data[month as string]) {
         // returnData[month] = data[month];
-        return data[month]
+        return data[month as string]
     }
     console.log('return empty')
     return []

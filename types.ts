@@ -17,4 +17,9 @@ export interface ScheduleType {
 export interface ResponseType<T> {
     data: globalThis.Ref<T>,
     error: globalThis.Ref<Error | null>
-  }
+}
+export interface SortedResponseByDayType {
+    [month: string]: {
+        [day: string]: ScheduleObjType[]
+    }
+}
