@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import type { ScheduleObjType } from '~/types';
+
     definePageMeta({
         layout: 'month'
     })
@@ -99,6 +101,13 @@
     const formatTime = (dateString: string) => {
         return useDateFormat(dateString, 'h:mma').value
     }
+    // Process the query to be added to the navigation request.
+    // This is because description might not always exist
+    const getQueryArgs = (schedule: ScheduleObjType) => {
+        let query = `?time=${schedule.scheduledTime}`;
+        if (schedule.description) query += `&description=${schedule.description}`
+        return query;
+    }
 </script>
 <template>
     <section @change="console.log('loaded', dateParams)" class="md:container mx-auto flex flex-col bg-prple-200 justify-center h-fit gap-10 my-6">
@@ -128,7 +137,8 @@
         <section class="date_schedule_content grid grid-cols-1 gap-3 bg-prple-50  w-[90%] leading-[50px]  mx-auto justify-center items-center"
                  :class=" scheduleExists ? 'relative' : 'static' ">
             <div class="schedule_content grid h-14 bg-[whitesmoke] grid-cols-6 px-4 rounded-md shadow-md cursor-pointer"
-                 @click="navigateTo(`${dayParams}/${schedule.title}?time=${schedule.scheduledTime}`)" v-for="schedule of SCHEDULE">
+                 @click="navigateTo(`${dayParams}/${schedule.title}${getQueryArgs(schedule)}`)" v-for="schedule of SCHEDULE"
+                 :title="schedule?.description">
                 <div class="time grid col-span-2 sm:col-span-1 w-full h-full">{{ formatTime(schedule.scheduledTime) }}</div>
                 <div class="description col-span-4 sm:col-span-5 truncate w-full h-full bg-slte-300">{{ schedule.title }}</div>
             </div>

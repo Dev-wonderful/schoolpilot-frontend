@@ -9,7 +9,8 @@ export type daysNum = {
 export interface ScheduleObjType {
     title: string,
     scheduledTime: string,
-    description?: string
+    description?: string,
+    scheduleColor?: string
 }
 export interface ScheduleType {
     [month: string]: ScheduleObjType[]
@@ -22,4 +23,7 @@ export interface SortedResponseByDayType {
     [month: string]: {
         [day: string]: ScheduleObjType[]
     }
+}
+export interface NewScheduleType extends ScheduleObjType{
+    scheduleMonth: string
 }

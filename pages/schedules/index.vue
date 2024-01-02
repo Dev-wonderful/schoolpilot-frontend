@@ -123,24 +123,28 @@
     <section class="schedule_calendar text-black bg-white grid grid-cols-7 grid-rows-7 w-[100%] h-[600px] 
                     sm:w-[95%] lg:w-[90%] sm:h[70vw] md:h-[100vw] lg:h-[50vw] px-2 lg:px-6 py-6 gap-[2px] lg:gap-2 mx-auto mb-7 justify-center items-center"
              :class=" breakpointsDynamics ? 'static' : 'relative' ">
-        <div class="days text-center leading-normal bg-primary text-white rounded-md" v-for="day of DAYS">{{ breakpointsDynamics ? day : day.slice(0, 3) }}</div>
+        <div class="days text-center leading-normal bg-primary text-white rounded-md" v-for="dayName of DAYS">{{ breakpointsDynamics ? dayName : dayName.slice(0, 3) }}</div>
         <div class="month_days w-[100%] h-[100%] lg:min-h[100px] flex flex-col cursor-pointer justify-between text-left pb-3 px-1 lg:px-2 shadow-md rounded-md" 
              v-for="day of dateRange(calculateDays)"
              @click="navigate(day.date)" :class="blurDateForPrevMonth(day.date)">
              
             {{ day.day }}
             <div class="activity bg-rd-50 h-[30px] sm:h-[50px] w-[100%] overflow-x-hidden overflow-y-clip flex flex-col gap-1 justify-start items-center">
-                <div class="activity_dot text-[10px] min-h-[12px] px-1 w-full lg:w-[80%] mx-auto rounded-md leading-[10px] text-center text-white bg-primary roundedfull truncate"
-                     v-for="schedule of scheduleByDay[day.day]?.slice(0, 3)">{{ schedule.title }}</div>
+                <div class="activity_dot text-[10px] min-h-[12px] bg[#ff0000] px-1 w-full lg:w-[80%] mx-auto rounded-md leading-[10px] text-center text-white invert bgprimary roundedfull truncate"
+                     :class="schedule.scheduleColor ? 'bg-['+ schedule.scheduleColor + ']' : 'bg-primary'"
+                     :style="{ 'background-color': schedule.scheduleColor ? schedule.scheduleColor : '#925FE2' }"
+                     v-for="schedule of scheduleByDay[day.day]?.slice(0, 3)" :title="schedule.title">
+                     {{ schedule.title }}
+                </div>
                      <!-- <div class="activity_dot h-1 w-1 bg-blue-950 rounded-full"></div> -->
                 </div>
-                <div v-if="seeMore(day.day)" class="text-[10px] text-center">See more</div>
+                <div v-if="seeMore(day.day)" class="text-[10px] text-center hover:text-primary">See more</div>
         </div>
         <AddScheduleButton />
     </section>
 </template>
 <style scoped>
-.add_schedule:hover .add_schedule_text{
-    display: block;
+.activity_dot {
+    mix-blend-mode: difference;
 }
 </style>

@@ -2,7 +2,7 @@
     const route = useRoute()
     const pathParams = route.params
     const { month, date, title } = pathParams
-    const { time } = route.query
+    const { time, description } = route.query
     const formattedDate = useDateFormat(`${date}-${month}` as string, 'Do of MMMM YYYY')
     const formattedTime = useDateFormat(time as string, 'h:mma')
     const status = useTimeAgo(time as string)
@@ -23,7 +23,7 @@
                     <p class="px-4 w-full shadow-inner h-10 leading-10 text-sm rounded-md">{{ status }}</p>
                 </div>
                 <div class="time w-full"><span>Description</span> 
-                    <textarea class="px-4 w-full shadow-inner h-24 leading-10 text-sm rounded-md" disabled>{{  }}</textarea>
+                    <textarea class="px-4 w-full shadow-inner h-24 leading-10 text-sm rounded-md" disabled>{{ description }}</textarea>
                 </div>
                 
             </section>
