@@ -1,41 +1,19 @@
 import type { ScheduleType } from "~/types"
+import fs from 'fs'
 
-export default defineEventHandler((event) => {
+export default defineEventHandler(async (event) => {
     // created to test store and state management and also to mock a network call
     const query = getQuery(event)
     
     const month = typeof query.month === 'string' ? query.month : null
-    const data: ScheduleType = {
-        'December-2023': [
-            {title: 'C++ Enums', scheduledTime: '2023-12-16T00:00:10.789'},
-            {title: 'C++ Functions', scheduledTime: '2023-12-12T13:27:10.789'},
-            {title: 'C++ Classes', scheduledTime: '2023-12-26T13:27:10.789'},
-            {title: 'C++ Structs', scheduledTime: '2023-12-16T13:27:10.789'},
-            {title: 'C++ Datatypes', scheduledTime: '2023-12-16T13:27:10.789'},
-            {title: 'Read Biology', scheduledTime: '2023-12-16T16:35:10.789'},
-            {title: 'Study reaction concepts', scheduledTime: '2023-12-16T13:07:10.789'},
-            {title: 'endocrine systems', scheduledTime: '2023-12-16T13:27:10.789'},
-            {title: 'Daily reading', scheduledTime: '2023-12-16T13:27:10.789'},
-            {title: 'Practice questions', scheduledTime: '2023-12-16T13:27:10.789'},
-        ],
-        'November-2023': [
-            {title: 'C++ Enums', scheduledTime: '2023-11-16T00:00:10.789'},
-            {title: 'C++ Functions', scheduledTime: '2023-11-12T13:27:10.789'},
-            {title: 'C++ Classes', scheduledTime: '2023-11-26T13:27:10.789'},
-            {title: 'C++ Structs', scheduledTime: '2023-11-16T13:27:10.789'},
-            {title: 'C++ Datatypes', scheduledTime: '2023-11-16T13:27:10.789'},
-            {title: 'Read Biology', scheduledTime: '2023-11-16T16:35:10.789'},
-            {title: 'Study reaction concepts', scheduledTime: '2023-11-16T13:07:10.789'},
-            {title: 'endocrine systems', scheduledTime: '2023-11-16T13:27:10.789'},
-            {title: 'Daily reading', scheduledTime: '2023-11-16T13:27:10.789'},
-            {title: 'Practice questions', scheduledTime: '2023-11-16T13:27:10.789'},
-        ]
+    
+    const response = fs.readFileSync('data.json', { encoding: 'utf-8' })
+    // console.log('sync file', JSON.parse(response))
+    const data: ScheduleType = JSON.parse(response)
+    // console.log(data)
+    if (data[month as string]) {
+        return data[month as string]
     }
-    // const returnData: ScheduleType = {};
-    if (month) {
-        // returnData[month] = data[month];
-        return data[month]
-    }
-    console.log('return empty')
+    // console.log('return empty')
     return []
   })

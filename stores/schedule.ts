@@ -1,4 +1,4 @@
-import type { daysNum, ScheduleType } from "~/types";
+import type { daysNum, ScheduleType, SortedResponseByDayType } from "~/types";
 
 export const useScheduleStore = defineStore("scheduleStore", () => {
     const currentDate = new Date().toDateString()
@@ -19,8 +19,9 @@ export const useScheduleStore = defineStore("scheduleStore", () => {
         'December': 31,
     })
     const scheduleData: globalThis.Ref<ScheduleType> = ref({})
+    const scheduleDataSortedByDay: globalThis.Ref<SortedResponseByDayType> = ref({})
 
-    return { presentMonth, days, daysInMonth, scheduleData }
+    return { presentMonth, days, daysInMonth, scheduleData, scheduleDataSortedByDay }
 }, { persist: {
     storage: persistedState.cookiesWithOptions({
         maxAge: 30

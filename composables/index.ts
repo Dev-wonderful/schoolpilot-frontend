@@ -1,4 +1,6 @@
 type requestMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE'
+// type requestPayload<T> = T
+// const payloadValue = undefined
 
 export const useErrorHandler = (error: globalThis.Ref<Error | null>) => {
     // This would be responsible for displaying an alert
@@ -6,7 +8,7 @@ export const useErrorHandler = (error: globalThis.Ref<Error | null>) => {
     console.error(error.value)
 }
 
-export const useMakeRequest = async (request: string, method: requestMethod = 'GET') => {
+export const useMakeRequest = async (request: string, method: requestMethod = 'GET', body: string | undefined = undefined) => {
     // console.log("called")
     const baseUrl = ''
     request = toValue(request)
@@ -14,7 +16,8 @@ export const useMakeRequest = async (request: string, method: requestMethod = 'G
     const { data, error } = await useAsyncData(
         request, 
         () => $fetch(`${baseUrl + request}`, {
-            method: method
+            method: method,
+            body: body
         })
     )
     return { data, error };
