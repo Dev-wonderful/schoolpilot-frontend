@@ -1,11 +1,17 @@
 <script lang="ts" setup>
-    import type { ScheduleType, ScheduleObjType } from '~/types'
+import type { ScheduleObjType } from '~/types';
+
+    definePageMeta({
+        layout: 'month'
+    })
     const route = useRoute()
     const monthParams = route.params.month as string
     const dayParams = route.params.date as string
     const dateParams = `${dayParams}-${monthParams}`
-    const { scheduleData } = storeToRefs(useScheduleStore())
-    console.log(scheduleData.value)
+    const { scheduleData, scheduleDataSortedByDay, presentMonth } = storeToRefs(useScheduleStore())
+
+    // get the schedule for a particular day in the month as read-only data
+    if (monthParams in scheduleData.value === false) presentMonth.value = monthParams.split('-').join(' ');
     const SCHEDULE = computed(() => {
         const processedDateSchedule = []
         if (monthParams in scheduleData.value) {
@@ -16,12 +22,8 @@
         }
         return processedDateSchedule
     })
-    // console.log(dateParams)
-    // const FUTURE = ref(2);
-    // const scheduleStore = useScheduleStore()
-    // const MONTHDAYS = computed(() => {
-    //     return storeToRefs(scheduleStore).daysInMonth.value
-    // })
+    const scheduleExists: boolean = SCHEDULE.value.length > 0 ? true : false;
+    
     const breakpoints = useBreakpoints({
         mobile: 300,
         sm:	640,
@@ -36,6 +38,9 @@
     const mediumWidth = breakpoints.md;
     // const smallWidth = breakpoints.sm;
     // const mobileWidth = breakpoints.mobile;
+
+    // Use the breakpoint checker to determine how many extra days to show
+    // besides the actual day been checked
     const OFFSET = computed(() => {
         if(largeWidth.value) return 3
         else if(mediumWidth.value) return 2
@@ -63,16 +68,15 @@
         date.setDate(dateDay + future);
         return useDateFormat(date, 'D MMMM YYYY').value;
     }
-
+    // Generate the days based on the OFFSET and FUTURE values, in 
+    // addition to the current day
     function* generateDate() {
-        // console.log('OFFSET:', OFFSET.value)
         let i = 0;
         let offset = OFFSET.value;
         let future = 1;
         let actualDate = true
         while(i <= (OFFSET.value + FUTURE.value)) {
             if (offset) {
-                // offset--;
                 yield previousDay(offset--)
             } else if (actualDate) {
                 actualDate = false
@@ -83,13 +87,11 @@
             i++
         }
     }
-    // console.log(dateParams.split('-').join(' ') === '2 December 2023')
-    
+    // A hack for the day string to be responsive based on breakpoint
     const splitDayValues = (dateString: string) => {
         return dateString.split(' ')
     };
 
-    // const breakpointsDynamics = breakpoints.lg
     const navigate = (dateString: string) => {
         // process and navigate to a route
         const dateArr = dateString.split(' ');
@@ -99,11 +101,21 @@
     const formatTime = (dateString: string) => {
         return useDateFormat(dateString, 'h:mma').value
     }
+    // Process the query to be added to the navigation request.
+    // This is because description might not always exist
+    const getQueryArgs = (schedule: ScheduleObjType) => {
+        let query = `?time=${schedule.scheduledTime}`;
+        if (schedule.description) query += `&description=${schedule.description}`
+        return query;
+    }
 </script>
 <template>
-    <section class="md:container mx-auto flex flex-col justify-between h-fit gap-14 mb-6">
-        <section class="seven-days grid grid-rows-1 text-[14px] md:text-[13px] w-[90%]
-                     bg-blue50 min-h-[17vw] sm:min-h-[70px] gap-2 mt-8 mx-auto justify-center items-center"
+    <section @change="console.log('loaded', dateParams)" class="md:container mx-auto flex flex-col bg-prple-200 justify-center h-fit gap-10 my-6">
+        <button class="bg-primary text-white m-0 w-fit rounded-md shadow-md p-2" @click="navigateTo('/schedules')">
+            back to schedule
+        </button>
+        <section class="seven-days bg-red200 grid grid-rows-1 text-[14px] md:text-[13px] w-[90%]
+                     bg-blue50 min-h-[17vw] sm:min-h-[70px] gap-2 mx-auto justify-center items-center"
                  :class="largeWidth ? 'grid-cols-9' : mediumWidth ? 'grid-cols-7' : 'grid-cols-5' ">
             <i class="fa fa-chevron-left fa-2x bg-red50 text-center text-primary cursor-pointer" 
                @click="navigate(previousDay())"></i>
@@ -122,13 +134,15 @@
             <i class="fa fa-chevron-right fa-2x bg-red50 text-center text-primary cursor-pointer" 
                @click="navigate(nextDay())"></i>
         </section>
-        <section class="date_schedule_content grid grid-cols-1 gap-3 bg-prple-50  w-[90%] leading-[50px]  mx-auto justify-center items-center">
+        <section class="date_schedule_content grid grid-cols-1 gap-3 bg-prple-50  w-[90%] leading-[50px]  mx-auto justify-center items-center"
+                 :class=" scheduleExists ? 'relative' : 'static' ">
             <div class="schedule_content grid h-14 bg-[whitesmoke] grid-cols-6 px-4 rounded-md shadow-md cursor-pointer"
-                 @click="navigateTo(`${dayParams}/${schedule.title}?time=${schedule.scheduledTime}`)" v-for="schedule of SCHEDULE">
+                 @click="navigateTo(`${dayParams}/${schedule.title}${getQueryArgs(schedule)}`)" v-for="schedule of SCHEDULE"
+                 :title="schedule?.description">
                 <div class="time grid col-span-2 sm:col-span-1 w-full h-full">{{ formatTime(schedule.scheduledTime) }}</div>
                 <div class="description col-span-4 sm:col-span-5 truncate w-full h-full bg-slte-300">{{ schedule.title }}</div>
             </div>
-            
+            <AddScheduleButton />
         </section>
     </section>
 </template>
