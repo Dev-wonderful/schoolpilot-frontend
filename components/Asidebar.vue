@@ -9,7 +9,7 @@
 
       </div>
         <div class="text-gray-300 inline-flex flex-col justify-center items-start gap-4 space-y-8">
-          <NuxtLink @click="closeMenu" to="/" class="dashboardlink flex hover:text-white items-center gap-2 justify-center">
+          <NuxtLink @click="closeMenu" to="/dashboard" class="dashboardlink flex hover:text-white items-center gap-2 justify-center">
             <img src="/assets/images/dashboard.png" alt="Dashboard" />
             <!-- <i class="fa-solid guage"></i> -->
             <span>Dashboard</span>
@@ -53,12 +53,9 @@
 
 </style>
 
-<script>
-export default {
-  methods: {
-    closeMenu() {
-      this.$emit('close-menu');
-    },
-  },
+<script setup>
+const emit = defineEmits(['close-menu'])
+const closeMenu = () => {
+  emit('close-menu');
 };
 </script>
