@@ -1,7 +1,14 @@
 <script setup>
 // You can add any script logic or data setup here if needed
-  const { name, avatar } = storeToRefs(useDashboardUpdateStore())
-  const imageSrc = avatar.value ? avatar.value : '/images/Frame.png'
+  const { name, avatar } = storeToRefs(useDashboardUpdateStore());
+  const imageSrc = avatar.value ? avatar.value : '/images/Frame.png';
+  const isMenuOpen = ref(false);
+  const toggleMenu = () => {
+    isMenuOpen.value = !isMenuOpen.value;
+  };
+  const closeMenu = () => {
+    isMenuOpen.value = false;
+  };
 </script>
 
 <template>
@@ -35,22 +42,3 @@
   </nav>
 </template>
 
-
-
-<script>
-export default {
-  data() {
-    return {
-      isMenuOpen: false,
-    };
-  },
-  methods: {
-    toggleMenu() {
-      this.isMenuOpen = !this.isMenuOpen;
-    },
-    closeMenu() {
-      this.isMenuOpen = false;
-    },
-  },
-};
-</script>
