@@ -58,6 +58,6 @@
 <template>
     <!-- <h1>hello from month layout</h1> -->
     <NuxtLayout name="default">
-        <slot ></slot>
+        <slot></slot>
     </NuxtLayout>
 </template>
