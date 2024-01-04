@@ -10,7 +10,7 @@
       </div>
         <div class="text-gray-300 inline-flex flex-col justify-center items-start gap-4 space-y-8">
           <NuxtLink @click="closeMenu" to="/dashboard" class="dashboardlink flex hover:text-white items-center gap-2 justify-center">
-            <img src="/assets/images/dashboard.png" alt="Dashboard" />
+            <span class="material-icons-sharp">dashboard</span>
             <!-- <i class="fa-solid guage"></i> -->
             <span>Dashboard</span>
           </NuxtLink>
