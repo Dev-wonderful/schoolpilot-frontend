@@ -10,7 +10,7 @@ export default defineEventHandler(async (event) => {
     
     const month = typeof query.month === 'string' ? query.month : null
 
-    const fileExists = fs.existsSync('/data.json');
+    const fileExists = fs.existsSync(path.join(process.cwd(), 'data.json'));
     console.log('exists:',fileExists);
     console.log('import.meta.url:', import.meta.url)
     const __filename = fileURLToPath(import.meta.url);
@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
     console.log('dirname_2:',__dirname_2)
     console.log('cwd', process.cwd())
     console.log('check:', fs.existsSync(path.join(process.cwd(), 'data.json')))
-    // if (!fileExists) fs.writeFileSync('/data.json', JSON.stringify({}))
+    if (!fileExists) fs.writeFileSync(path.join(process.cwd(), 'data.json'), JSON.stringify({}))
     
     const response = fs.readFileSync('data.json', { encoding: 'utf-8' })
     // console.log('sync file', JSON.parse(response))
