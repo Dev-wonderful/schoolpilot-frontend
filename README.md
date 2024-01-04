@@ -73,3 +73,6 @@ bun run preview
 ```
 
 Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+
+### references
+[event handling child to parent component](https://learnvue.co/articles/vue-emit-guide)
