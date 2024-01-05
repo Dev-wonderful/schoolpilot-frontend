@@ -9,6 +9,7 @@ export default defineEventHandler(async (event) => {
     const query = getQuery(event)
     
     const month = typeof query.month === 'string' ? query.month : null
+    let file: string = 'data.json'
 
     const fileExists = fs.existsSync(path.join(process.cwd(), 'data.json'));
     const fileExistsSecondLocation = fs.existsSync('/tmp/data.json');
@@ -21,9 +22,15 @@ export default defineEventHandler(async (event) => {
     console.log('dirname_2:',__dirname_2)
     console.log('cwd', process.cwd())
     console.log('check:', fs.existsSync('/tmp/data.json'))
-    if (!fileExists) if(!fileExistsSecondLocation) fs.writeFileSync('/tmp/data.json', JSON.stringify({}))
+    // if (!fileExists) if(!fileExistsSecondLocation) fs.writeFileSync('/tmp/data.json', JSON.stringify({}))
+    if (!fileExists) {
+        if(!fileExistsSecondLocation) {
+            fs.writeFileSync('/tmp/data.json', JSON.stringify({}))
+        }
+        file = '/tmp/data.json'
+    }
     
-    const response = fs.readFileSync('data.json', { encoding: 'utf-8' })
+    const response = fs.readFileSync(file, { encoding: 'utf-8' })
     // console.log('sync file', JSON.parse(response))
     const data: ScheduleType = JSON.parse(response)
     // console.log(data)
