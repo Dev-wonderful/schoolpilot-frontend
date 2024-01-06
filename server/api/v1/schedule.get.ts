@@ -9,19 +9,11 @@ export default defineEventHandler(async (event) => {
     const query = getQuery(event)
     
     const month = typeof query.month === 'string' ? query.month : null
-    let file: string = 'data.json'
 
+    let file: string = 'data.json'
     const fileExists = fs.existsSync(path.join(process.cwd(), 'data.json'));
     const fileExistsSecondLocation = fs.existsSync('/tmp/data.json');
-    console.log('exists:',fileExists);
-    console.log('import.meta.url:', import.meta.url)
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = path.join(path.dirname(__filename));
-    const __dirname_2 = path.join(path.dirname(__filename), '../..');
-    console.log('dirname', __dirname)
-    console.log('dirname_2:',__dirname_2)
-    console.log('cwd', process.cwd())
-    console.log('check:', fs.existsSync('/tmp/data.json'))
+    
     // if (!fileExists) if(!fileExistsSecondLocation) fs.writeFileSync('/tmp/data.json', JSON.stringify({}))
     if (!fileExists) {
         if(!fileExistsSecondLocation) {

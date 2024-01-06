@@ -16,6 +16,6 @@ export default defineNuxtConfig({
   },
   routeRules: {
     // Homepage 
-    '/schedule/**': { ssr: false },
+    '/schedules/**': { ssr: false },
   }
 })

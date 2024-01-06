@@ -18,12 +18,19 @@ export const useScheduleStore = defineStore("scheduleStore", () => {
         'November': 30,
         'December': 31,
     })
-    const scheduleData: globalThis.Ref<ScheduleType> = ref({})
-    const scheduleDataSortedByDay: globalThis.Ref<SortedResponseByDayType> = ref({})
+    const scheduleData = ref(useCookie<ScheduleType>('scheduleData', {maxAge: 30, default: () => ref({})}).value)
+    // const scheduleData: globalThis.Ref<ScheduleType> = ref({})
+    const scheduleDataSortedByDay = ref(useCookie<SortedResponseByDayType>('scheduleDataSortedByDay', {maxAge: 30, default: () => ref({})}).value)
+    // const scheduleDataSortedByDay: globalThis.Ref<SortedResponseByDayType> = ref({})
+    const reloadData = ref(false)
 
-    return { presentMonth, days, daysInMonth, scheduleData, scheduleDataSortedByDay }
-}, { persist: {
-    storage: persistedState.cookiesWithOptions({
-        maxAge: 30
-    })
-} })
+    return { presentMonth, days, daysInMonth, scheduleData, scheduleDataSortedByDay, reloadData }
+}, {persist: [
+        {
+            paths: ['presentMonth'],
+            storage: persistedState.cookiesWithOptions({
+                maxAge: 30
+            })
+        } 
+    ]
+})

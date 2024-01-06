@@ -19,10 +19,11 @@ export interface ResponseType<T> {
     data: globalThis.Ref<T>,
     error: globalThis.Ref<Error | null>
 }
+export interface SortedDayType {
+    [day: string]: ScheduleObjType[]
+}
 export interface SortedResponseByDayType {
-    [month: string]: {
-        [day: string]: ScheduleObjType[]
-    }
+    [month: string]: SortedDayType
 }
 export interface NewScheduleType extends ScheduleObjType{
     scheduleMonth: string
