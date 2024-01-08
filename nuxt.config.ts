@@ -16,6 +16,12 @@ export default defineNuxtConfig({
   },
   routeRules: {
     // Homepage 
-    '/schedule/**': { ssr: false },
-  }
+    '/schedules/**': { ssr: false },
+  },
+  runtimeConfig: {
+    public: {
+      PROD_BASE_URL: process.env.PROD_BASE_URL,
+ 
+    },
+  },
 })
