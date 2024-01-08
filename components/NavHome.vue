@@ -12,6 +12,10 @@
         dropdownsignup.value = false
         dropdownlogin.value = !dropdownlogin.value
     }
+    watch([dropdownlogin, dropdownsignup], (dropdown) => {
+        if (dropdown[0]) setTimeout(() => dropdownlogin.value = false, 5000)
+        if (dropdown[1]) setTimeout(() => dropdownsignup.value = false, 5000)
+    })
 </script>
 
 <template>
