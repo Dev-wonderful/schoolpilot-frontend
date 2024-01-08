@@ -12,7 +12,7 @@ definePageMeta({
                 <h2 class="text-6xl font-bold mb-4">School <br/> <span class="">Management System</span></h2>
                 <p class="text-2xl mb-4 w-2/3">Easy-to-use software to help your school save time, improve enrollment and fulfill it's mission</p>
                 <div class="mt-10">
-                    <NuxtLink class="mx-auto bg-primary rounded-xl text-white py-4 px-8 font-bold w-48 text-2xl" to="/login">Request Demo</NuxtLink>
+                    <NuxtLink class="mx-auto bg-primary rounded-xl text-white py-4 px-8 font-bold w-48 text-2xl" to="/loginPage">Request Demo</NuxtLink>
                 </div>
 
             </div>

@@ -11,18 +11,42 @@
       const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       isValidEmail.value = emailRegex.test(email.value);
     }
-   function onSubmit(){
-      if (isValidEmail.value) {
-        const formData = {
-          email: email.value,
-          firstname: firstname.value,
+//    function onSubmit(){
+//       if (isValidEmail.value) {
+//         const formData = {
+//           email: email.value,
+//           firstname: firstname.value,
+//         };
+//         console.log(formData)
+//         }
+//         else
+//         {
+//           alert("Please enter a valid email address")
+//         }}
+    async function onSubmit() {
+        if (isValidEmail.value) {
+            const formData = {
+           email: email.value,
+          firstName: firstname.value,
         };
-        console.log(formData)
+            console.log(formData);
+
+            try {
+            const { data } = await useFetch('https://schoolpilot.onrender.com/api/v1/studentportal/signin', {
+                method: 'POST',
+                body: formData,
+            });
+
+            // Handle the response data
+            console.log('Response:', data);
+            } catch (error) {
+            // Handle errors
+            console.error('Error:', error);
+            }
+        } else {
+            alert('Please enter a valid email address');
         }
-        else
-        {
-          alert("Please enter a valid email address")
-        }}
+    }
 </script>
 
 <template>
