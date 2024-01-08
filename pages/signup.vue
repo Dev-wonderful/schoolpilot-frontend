@@ -12,43 +12,6 @@
         message: string,
         token: string
     }
-<<<<<<< HEAD
-//    function onSubmit(){
-//       if (isValidEmail.value) {
-//         const formData = {
-//           email: email.value,
-//           firstname: firstname.value,
-//         };
-//         console.log(formData)
-//         }
-//         else
-//         {
-//           alert("Please enter a valid email address")
-//         }}
-    async function onSubmit() {
-        if (isValidEmail.value) {
-            const formData = {
-           email: email.value,
-          firstName: firstname.value,
-        };
-            console.log(formData);
-
-            try {
-            const { data } = await useFetch('https://schoolpilot.onrender.com/api/v1/studentportal/signin', {
-                method: 'POST',
-                body: formData,
-            });
-
-            // Handle the response data
-            console.log('Response:', data);
-            } catch (error) {
-            // Handle errors
-            console.error('Error:', error);
-            }
-        } else {
-            alert('Please enter a valid email address');
-        }
-=======
 
     const route = useRoute()
     const { role: userRole } = route.query
@@ -96,7 +59,6 @@
         .catch((error: Error) => alert(error.message))
         
         // console.log('nothing')
->>>>>>> 4487fa4fc14a2fdabc3e0412e136d1f03e1112dd
     }
 </script>
 
