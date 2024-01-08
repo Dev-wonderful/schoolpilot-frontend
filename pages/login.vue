@@ -1,28 +1,64 @@
-<script setup>
+<script lang="ts" setup>
     definePageMeta({
-        layout: 'login'
+        layout: 'home'
     })
-    const email = ref('');
-    const password = ref('');
-    const isValidEmail =ref('')
 
-   function validateEmail() {
-      const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-      isValidEmail.value = emailRegex.test(email.value);
+    import type { CustomError } from '~/types'
+
+    type loginData = {
+        email: string,
+        message: string,
+        xToken: string
     }
-   function onSubmit(){
-      if (isValidEmail.value) {
+
+    const route = useRoute();
+    const { role } = route.query;
+    const userEmail = ref('');
+    const password = ref('');
+    const isValidEmail = ref(false);
+    const passwordPattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$";
+    
+    function validateEmail() {
+        const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        isValidEmail.value = emailRegex.test(userEmail.value);
+    }
+    function onSubmit(){
+        if (!isValidEmail.value) {
+            alert("Please enter a valid email address")
+        }
         const formData = {
-          email: email.value,
-          password: password.value,
+            email: userEmail.value,
+            password: password.value,
         };
         console.log(formData)
-        }
-        else
-        {
-          alert("Please enter a valid email address")
-          console.log(isValidEmail.value)
-        }}
+        
+        const requestEndpoint = `/${role}portal/login`;
+        useMakeRequest(requestEndpoint, 'POST', JSON.stringify(formData), true).then((response) => {
+            // console.log('Data:', response.data.value)
+            // console.log('Error:', (response.error.value as CustomError)?.statusCode)
+            const status = response.status.value
+            // console.log(status)
+            if (status === 'success') {
+                // console.log('successful')
+                return response.data.value
+            } else if (status === 'error') {
+                const statusCode = (response.error.value as CustomError)?.statusCode
+                if (statusCode === 401) {
+                    // console.log('throw error')
+                    throw new Error('Sorry invalid credentials')
+                } else navigateTo('/');
+            }
+        })
+        .then((response) => {
+            console.log('loggedin response:', response)
+            // email.value = (response as ActivationData).email
+            document.cookie = `xToken=${(response as loginData).xToken}`
+            navigateTo('/dashboard')
+        })
+        .catch((error: Error) => alert(error.message))
+        
+        // console.log('nothing')
+    }
 </script>
 
 <template>
@@ -33,14 +69,17 @@
                 <p class="font-bold text-primary">SchoolPilot</p>
             </div>
             <div class="flex flex-col items-center justify-center">
-                <form @submit.prevent="onSubmit" class="flex flex-col items-center justify-center">
-                    <input type="email" @input="validateEmail" v-model="email" placeholder="Email" required class="border focus:outline-none border-primary focus:border-[#3c005a] rounded-xl w-72 h-12 mb-4 px-4">
-                    <input type="password" v-model="password" placeholder="Password" required class="focus:outline-none focus:border-[#3c005a] border border-primary rounded-xl w-72 h-12 mb-4 px-4">
-                    <button type="submit" class="bg-primary rounded-xl text-white py-4 px-6 font-bold  text-2xl mb-4 w-72 text-center" to="/dashboard">Login</button>
+                <form @submit.prevent="onSubmit" @keypress.enter="onSubmit" class="flex flex-col gap-y-4 items-center justify-center">
+                    <input type="email" id="email" v-model="userEmail" @input="validateEmail" placeholder="Email" required 
+                           class="focus:outline-none focus:border-[#3c005a] valid:border-green-400 invalid:border-red-400 border border-primary rounded-xl w-72 h-12 px-4">
+                    <input type="password" v-model="password" placeholder="Password" :pattern="passwordPattern" required 
+                           class="border valid:border-green-400 invalid:border-red-400 focus:outline-none border-primary focus:border-[#3c005a] rounded-xl w-72 h-12 px-4" />
+
+                    <button type="submit" class="bg-primary rounded-xl text-white py-4 font-bold  text-2xl mb-4 w-72 text-center">Login</button>
+                    
                 </form>
             </div>
         </div>
     </div>
-
 </template>
 

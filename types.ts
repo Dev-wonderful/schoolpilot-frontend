@@ -28,3 +28,6 @@ export interface SortedResponseByDayType {
 export interface NewScheduleType extends ScheduleObjType{
     scheduleMonth: string
 }
+export interface CustomError extends Error {
+    statusCode: number
+}
