@@ -5,15 +5,33 @@
     const scheduleStore = useScheduleStore()
     const { presentMonth, days, daysInMonth, scheduleDataSortedByDay } = storeToRefs(scheduleStore)
     const LEAPNUMBER = 4;
+    const route = useRoute()
+    const { updatedMonth } = route.query
+    if (updatedMonth) {
+        console.log('update')
+        presentMonth.value = updatedMonth as string
+        // location.replace('/schedules')
+    }
     const offsetMonth = ref(presentMonth.value)
     const DAYS = days.value;
     const scheduleByDay = computed(() => {
-        console.log('data:', presentMonth.value, scheduleDataSortedByDay.value)
         const month = presentMonth.value.split(' ').join('-')
+        console.log('data:', month, scheduleDataSortedByDay.value, scheduleDataSortedByDay.value[month])
         if(month in scheduleDataSortedByDay.value) {
             return scheduleDataSortedByDay.value[month]
         }
         return {}
+    // }, {
+    //     onTrack(e) {
+    //         // triggered when count.value is tracked as a dependency
+    //         console.log('track',e)
+    //         // debugger
+    //     },
+    //     onTrigger(e) {
+    //         // triggered when count.value is mutated
+    //         console.log('trigger',e)
+    //         // debugger
+    //     }
     })
     
     // Get the number of days in present month 
@@ -102,7 +120,7 @@
     }
     // check if 'see more' is necessary
     const seeMore = (day: string) => {
-        if (day in scheduleByDay.value && scheduleByDay.value[day]?.length > 2) return true
+        if (day in scheduleByDay.value && scheduleByDay.value[day]?.length > 3) return true
         else false
     }
 
@@ -131,7 +149,6 @@
             {{ day.day }}
             <div class="activity bg-rd-50 h-[30px] sm:h-[50px] w-[100%] overflow-x-hidden overflow-y-clip flex flex-col gap-1 justify-start items-center">
                 <div class="activity_dot text-[10px] min-h-[12px] bg[#ff0000] px-1 w-full lg:w-[80%] mx-auto rounded-md leading-[10px] text-center text-white invert bgprimary roundedfull truncate"
-                     :class="schedule.scheduleColor ? 'bg-['+ schedule.scheduleColor + ']' : 'bg-primary'"
                      :style="{ 'background-color': schedule.scheduleColor ? schedule.scheduleColor : '#925FE2' }"
                      v-for="schedule of scheduleByDay[day.day]?.slice(0, 3)" :title="schedule.title">
                      {{ schedule.title }}
