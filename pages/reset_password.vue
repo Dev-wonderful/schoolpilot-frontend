@@ -35,6 +35,7 @@
     function onSubmit(){
         if (!isValidEmail.value) {
             alert("Please enter a valid email address")
+            return
         }
         const formData: ResetPassword = {
             email: userEmail.value,
