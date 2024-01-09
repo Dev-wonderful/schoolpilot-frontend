@@ -1,6 +1,8 @@
 <script lang="ts" setup>
     import type { ScheduleObjType, ResponseType, NewScheduleType } from '~/types';
 
+    const { reloadData } = storeToRefs(useScheduleStore())
+
     const defaultColor = ref("#925FE2");
     const currentDay = () => {
         const date = new Date()
@@ -12,18 +14,41 @@
         date.setMinutes(minute + 2)
         return useDateFormat(date, 'HH:mm').value
     }
+    const cancelInvalidEventForValidTime = (event: Event) => {
+        const date = (document.getElementById('date') as HTMLInputElement).value;
+        const today = new Date().valueOf()
+        const selectedDay = new Date(date).valueOf()
+        // console.log('it waS TRIGGERED', date, selectedDay - today);
+        const targetElement = event.target as HTMLInputElement
+        if ((selectedDay - today) > 0) {
+            event.preventDefault();
+            event.stopPropagation();
+            targetElement.dataset.valid = 'true';
+        } else delete targetElement.dataset?.valid
+    }
     const handleNewSchedulePosting = (event: Event) => {
         event.preventDefault();
         const form = (document.getElementById('new-schedule') as HTMLFormElement)
+        const inputs = document.querySelectorAll('input')
+        // console.log('inputs',inputs)
         // if validation fails cancel processing
-        if (!form.reportValidity()) return
+        if (!form.reportValidity()) {
+            const invalidity = [];
+            for (let input of inputs) {
+                if(!input.checkValidity()) {
+                    if(!Boolean(input.dataset.valid)) invalidity.push(true)
+                }
+            }
+            console.log(invalidity)
+            if (invalidity.includes(true)) return
+        }
 
         // runs after validation has passed
         const title = (document.getElementById('title') as HTMLInputElement).value;
         const date = (document.getElementById('date') as HTMLInputElement).value;
         const time = (document.getElementById('time') as HTMLInputElement).value;
         const scheduleColor = (document.getElementById('color') as HTMLInputElement).value;
-        const description = (document.getElementById('description') as HTMLInputElement).value;
+        const description = (document.getElementById('description') as HTMLTextAreaElement).value;
         console.log('data:', title, date, time, scheduleColor, description);
         const monthAndYear = useDateFormat(date, 'MMMM-YYYY').value;
         console.log('month and year:', monthAndYear);
@@ -46,7 +71,8 @@
                 // navigateTo('/schedules/new_schedule')
                 location.reload()
             } else {
-                navigateTo('/schedules');
+                reloadData.value = true
+                navigateTo(`/schedules?updatedMonth=${monthAndYear.split('-').join(' ')}`);
             }
         })
     }
@@ -66,7 +92,9 @@
                     <input type="date" id="date" :min="currentDay()" name="date" class="px-4 w-full shadow-inner h-10 leading-10 text-sm rounded-md" required>
                 </label>
                 <label for="time" class="time w-full">Time <span class=" text-red-600">*</span>
-                    <input type="time" id="time" :min="currentTime()" name="time" class="px-4 w-full shadow-inner h-10 leading-10 text-sm rounded-md" required>
+                    <input type="time" id="time" :min="currentTime()" name="time" 
+                           @invalid="(e) => cancelInvalidEventForValidTime(e)"
+                           class="px-4 w-full shadow-inner h-10 leading-10 text-sm rounded-md" required>
                 </label>
                 <label for="color" class="time w-full">Schedule Colour <span class=" text-red-600">*</span>
                     <input type="color" v-model="defaultColor" id="color" name="color" class="px4 w-full shadow-inner h-10 leading-10 text-sm rounded-md" required>
