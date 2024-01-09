@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+    import { toast } from 'vue3-toastify';
     definePageMeta({
         layout: 'home'
     })
@@ -47,7 +48,7 @@
                 const statusCode = (response.error.value as CustomError)?.statusCode
                 if (statusCode === 400) {
                     // console.log('throw error')
-                    throw new Error('Sorry your request was not successful,\nTry again later or reach out to your admin if this persists\nThis may be due to invalid credentials')
+                    throw new Error('Sorry your request was not successful, This may be due to invalid credentials')
                 } else throw new Error('Forbidden');
             }
         })
@@ -58,8 +59,11 @@
             navigateTo('/account_activation');
         })
         .catch((error: Error) => {
-            alert(error.message);
-            navigateTo('/');
+           // alert(error.message);
+            //navigateTo('/');
+            toast.error(`${error.message}`, {
+            position: toast.POSITION.TOP_CENTER, autoClose: 3000
+            });
         })
         
         // console.log('nothing')
