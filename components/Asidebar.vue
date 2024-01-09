@@ -1,38 +1,41 @@
 <template>
-  <section class="bg-primary m4 roundedlg">
+  <section class="bg-primary h-full">
     <aside class="flex  flex-col items-center text-white p-4 ">
       <div class="top pb-10">
-        <div class="logo ">
+        <div class=" hidden md:block ">
           <img class="" src="/assets/images/GraduationCap.png"/>
           <h2 class="text-lg font-bold">SchoolPilot</h2>
         </div>
-        <!-- <div class="close" id="close-btn">
-          <span class="material-icons-sharp">close</span>
-        </div> -->
+
       </div>
-        <div class="text-white inline-flex flex-col justify-center items-start gap-4 space-y-8">
-          <NuxtLink to="/" class="dashboardlink flex items-center gap-2 justify-center">
-            <img src="/assets/images/dashboard.png" alt="Dashboard" />
+        <div class="text-gray-300 inline-flex flex-col justify-center items-start gap-4 space-y-8">
+          <NuxtLink @click="closeMenu" to="/dashboard" class="dashboardlink flex hover:text-white items-center gap-2 justify-center">
+            <span class="material-icons-sharp">dashboard</span>
+            <!-- <i class="fa-solid guage"></i> -->
             <span>Dashboard</span>
           </NuxtLink>
-          <NuxtLink to="/registration" class="dashboardlink flex items-center gap-2 justify-center">
-            <img src="/assets/images/contacts-alt.png" alt="Registration" />
+          <NuxtLink @click="closeMenu" to="/registration" class="registrationlink hover:text-white flex items-center gap-2 justify-center">
+            <!-- <img src="/assets/images/contacts-alt.png" alt="Registration" /> -->
+            <i class="fa fa-edit fa-lg"></i>
             <span>Registration</span>
           </NuxtLink>
-          <NuxtLink to="/courses" class="dashboardlink flex items-center gap-2 justify-center">
-            <img src="/assets/images/notebook.png" alt="Courses" />
+          <NuxtLink @click="closeMenu" to="/courses" class="courseslink hover:text-white flex items-center gap-2 justify-center">
+            <!-- <img src="/assets/images/notebook.png" alt="Courses" /> -->
+            <i class="fa fa-book fa-lg"></i>
             <span>Courses</span>
           </NuxtLink>
-          <NuxtLink to="/assignments" class="dashboardlink flex items-center gap-2 justify-center">
-            <img src="/assets/images/notebook.png" alt="Assignments" />
+          <NuxtLink @click="closeMenu" to="/assignments" class="assignmentslink hover:text-white flex items-center gap-2 justify-center">
+            <!-- <img src="/assets/images/notebook.png" alt="Assignments" /> -->
+            <i class="fa fa-briefcase fa-lg"></i>
             <span>Assignments</span>
           </NuxtLink>
-          <NuxtLink to="/schedules" class="dashboardlink flex items-center gap-2 justify-center">
-            <img src="/assets/images/contacts-alt.png" alt="Schedules" />
+          <NuxtLink @click="closeMenu" to="/schedules" class="scheduleslink hover:text-white flex items-center gap-2 justify-center">
+            <!-- <img src="/assets/images/contacts-alt.png" alt="Schedules" /> -->
+            <i class="fa fa-calendar fa-lg"></i>
             <span>Schedules</span>
           </NuxtLink>
-          <NuxtLink to="/settings" class="dashboardlink flex items-center gap-2 justify-center">
-            <img src="/assets/images/dashboard.png" alt="Settings" />
+          <NuxtLink @click="closeMenu" to="/settings" class="settingslink hover:text-white flex items-center gap-2 justify-center">
+            <i class="fa fa-cog fa-lg"></i>
             <span>Settings</span>
           </NuxtLink>
         </div>
@@ -42,10 +45,17 @@
 
 <style scoped>
 /* Add any additional styling as needed */
-.dashboardlink img {
+/* .dashboardlink img {
   max-width: 40px;
   max-height: 40px;
   margin-bottom: 8px;
-}
+} */
 
 </style>
+
+<script setup>
+const emit = defineEmits(['close-menu'])
+const closeMenu = () => {
+  emit('close-menu');
+};
+</script>

@@ -27,6 +27,7 @@
 .sidebar {
   grid-area: sidebar;
   height: 100%;
+  overflow-y: auto;
 }
 .main {
   grid-area: main;
@@ -37,6 +38,26 @@
 }
 .main::-webkit-scrollbar {
   display: none;
+}
+
+@media only screen and (max-width: 768px) {
+  .grid-container {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    grid-template-areas:
+      "header"
+      "main";
+  }
+  .header {
+    height: auto;
+  }
+  .sidebar {
+   display: none;
+  }
+  .main {
+    height: auto;
+    overflow-y: scroll;
+  }
 }
 </style>
 
