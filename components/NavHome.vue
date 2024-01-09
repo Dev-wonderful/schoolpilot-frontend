@@ -9,15 +9,15 @@
 </script>
 
 <template>
-    <nav class="text-white border-none flex gap-x-3 bg-primary justify-around md:justify-between w-screen items-center shadow-md mx-auto h-18 py-1 px-16">
+    <nav class="text-white border-none flex gap-x-3 bg-primary justify-between w-screen items-center shadow-md mx-auto h-18 py-1 px-6 md:px-16">
         <NuxtLink to="/" class=" flex hover:text-slate-200 flex-col items-center cursor-pointer">
             <img src="/assets/images/GraduationCap.png" class="w-8">
             <p class="font-bold">SchoolPilot</p>
         </NuxtLink>
         <!-- The parents would be display a dropdown -->
         <!-- TODO: create dropdown -->
-        <div class="space-x-16">
-            <div class="relative inline-block ">
+        <div class=" ">
+            <div class="relative inline-block pr-20 md:pr-24">
                 <button type="button" @click="toggledropdownlogin" class="font-medium hover:text-slate-200">Login</button>
                 <div v-if="dropdownlogin" class="absolute top-9 -left-2">
                     <div class="flex flex-col gap-3 w-32 rounded-lg px-2 bg-primary">
@@ -26,7 +26,7 @@
                     </div>
                 </div>
             </div>
-                <div class="relative inline-block">
+            <div class="relative inline-block max-[767px]:pr-12 pr-5">
                 <button type="button" @click="toggledropdownsignup" class="font-medium hover:text-slate-200">Signup</button>
                 <div v-if="dropdownsignup" class="absolute top-9 -left-2">
                     <div class="flex flex-col gap-3 w-32 rounded-lg px-2 bg-primary">

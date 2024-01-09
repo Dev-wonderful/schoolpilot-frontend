@@ -38,7 +38,7 @@
             // console.log('Data:', response.data.value)
             // console.log('Error:', (response.error.value as CustomError)?.statusCode)
             const status = response.status.value
-            // console.log(status)
+            console.log(status)
             if (status === 'success') {
                 // console.log('successful')
                 return response.data.value
