@@ -13,27 +13,32 @@
 
     const route = useRoute();
     const { role } = route.query;
-    const userEmail = ref('');
+    const roleState = ref(role as string)
+    const matricNo = ref('');
     const password = ref('');
-    const isValidEmail = ref(false);
+    // const isValidEmail = ref(false);
     const passwordPattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$";
     
-    function validateEmail() {
-        const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        isValidEmail.value = emailRegex.test(userEmail.value);
-    }
+    // function validateEmail() {
+    //     const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    //     isValidEmail.value = emailRegex.test(userEmail.value);
+    // }
     function onSubmit(){
-        if (!isValidEmail.value) {
-            alert("Please enter a valid email address")
+        const userCredentials = `${matricNo.value}:${password.value}`
+        // convert to Base64
+        const authToken = btoa(userCredentials)
+        console.log('auth:', authToken)
+        const BasicAuthHeader = {
+            'Authorization': `Basic ${authToken}`
         }
         const formData = {
-            email: userEmail.value,
+            matricNo: matricNo.value,
             password: password.value,
         };
         console.log(formData)
         
         const requestEndpoint = `/${role as string}portal/login`;
-        useMakeRequest(requestEndpoint, 'POST', JSON.stringify(formData), true)
+        useMakeRequest(requestEndpoint, 'POST', undefined, true, BasicAuthHeader)
         .then((response) => {
             // console.log('Data:', response.data.value)
             // console.log('Error:', (response.error.value as CustomError)?.statusCode)
@@ -65,7 +70,13 @@
         })
         
         // console.log('nothing')
+        // func(name=value)
     }
+    console.log('student:', role === 'student' ? 'Matric Number': 'Staff ID')
+    watch(roleState, (newRole) => {
+        console.log('new role', newRole)
+        location.reload()
+    })
 </script>
 
 <template>
@@ -77,7 +88,7 @@
             </div>
             <div class="flex flex-col items-center justify-center">
                 <form @submit.prevent="onSubmit" @keypress.enter="onSubmit" class="flex flex-col gap-y-4 items-center justify-center">
-                    <input type="email" id="email" v-model="userEmail" @input="validateEmail" placeholder="Email" required 
+                    <input type="text" id="matric-no" v-model="matricNo" :placeholder="roleState === 'student' ? 'Matric Number': 'Staff ID'" required 
                            class="focus:outline-none focus:border-[#3c005a] valid:border-green-400 invalid:border-red-400 border border-primary rounded-xl w-72 h-12 px-4">
                     <input type="password" v-model="password" placeholder="Password" :pattern="passwordPattern" required 
                            class="border valid:border-green-400 invalid:border-red-400 focus:outline-none border-primary focus:border-[#3c005a] rounded-xl w-72 h-12 px-4" />
