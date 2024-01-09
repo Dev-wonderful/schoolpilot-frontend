@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+    import { toast } from 'vue3-toastify';
     definePageMeta({
         layout: 'home'
     })
@@ -43,6 +44,7 @@
             if (status === 'success') {
                 // console.log('successful')
                 return response.data.value
+                
             } else if (status === 'error') {
                 const statusCode = (response.error.value as CustomError)?.statusCode
                 console.log('error')
@@ -58,10 +60,12 @@
             console.log('loggedin response:', response)
             // email.value = (response as ActivationData).email
             document.cookie = `xToken=${(response as loginData)?.xToken}`
-            navigateTo('/dashboard')
+            setTimeout(() => toast.success('login successful', { autoClose: 2000 }), 1000)
+            navigateTo('/dashboard');
         })
         .catch((error: Error) => {
-            alert(error.message);
+            //alert(error.message);
+            setTimeout(() => toast.error(`${error.message} redirected to activate account`, {autoClose: 2000}), 1000);
             navigateTo(`/signup?role=${role as string}`)
         })
         
