@@ -11,6 +11,15 @@ export const useErrorHandler = (error: globalThis.Ref<Error | null>) => {
     console.error(error.value)
 }
 
+/**
+ * Calls the endpoint for you
+ * @param {string} request The endpoint url to call
+ * @param {requestMethod} method The HTTP method
+ * @param {string} body The request payload
+ * @param {boolean} staging The environment to target
+ * @param {Header} header Any additional headers for the request
+ * @returns A Promise object of the request
+ */
 export const useMakeRequest = (request: string, method: requestMethod = 'GET', body: string | undefined = undefined, staging = false, header: Header = {}) => {
     // console.log("called")
     const runtimeConfig = useRuntimeConfig();

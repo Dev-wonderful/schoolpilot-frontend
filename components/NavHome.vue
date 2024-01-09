@@ -3,9 +3,19 @@
         document.cookie = `portal=${role}portal`
     }
     const dropdownsignup = ref(false);
-    const toggledropdownsignup = () => { dropdownsignup.value = !dropdownsignup.value}
+    const toggledropdownsignup = () => { 
+        dropdownlogin.value = false
+        dropdownsignup.value = !dropdownsignup.value
+    }
     const dropdownlogin = ref(false);
-    const toggledropdownlogin = () => { dropdownlogin.value = !dropdownlogin.value}
+    const toggledropdownlogin = () => {
+        dropdownsignup.value = false
+        dropdownlogin.value = !dropdownlogin.value
+    }
+    watch([dropdownlogin, dropdownsignup], (dropdown) => {
+        if (dropdown[0]) setTimeout(() => dropdownlogin.value = false, 5000)
+        if (dropdown[1]) setTimeout(() => dropdownsignup.value = false, 5000)
+    })
 </script>
 
 <template>
@@ -16,26 +26,28 @@
         </NuxtLink>
         <!-- The parents would be display a dropdown -->
         <!-- TODO: create dropdown -->
-        <div class=" ">
-            <div class="relative inline-block pr-20 md:pr-24">
-                <button type="button" @click="toggledropdownlogin" class="font-medium hover:text-slate-200">Login</button>
-                <div v-if="dropdownlogin" class="absolute top-9 -left-2">
-                    <div class="flex flex-col gap-3 w-32 rounded-lg px-2 bg-primary">
-                    <NuxtLink @click="toggledropdownlogin" class="font-medium hover:text-slate-200 text-white" to="/login?role=student">Student Login</NuxtLink>
-                    <NuxtLink @click="toggledropdownlogin" class="font-medium hover:text-slate-200 text-white" to="/login?role=staff">Staff Login</NuxtLink>
+        <div class=" text-center bgblack w-72">
+            <div class="relative inline-block w-32 bg-red400">
+                <button type="button" @click="toggledropdownlogin" class="h-12 font-medium bg-blue400 hover:text-slate-200">Login</button>
+                <div v-if="dropdownlogin" class="absolute top-12 -lef-2">
+                    <div class="flex flex-col py-4 gap-3 w-32 rounded-lg px2 bg-primary">
+                        <!-- <div></div> -->
+                        <NuxtLink @click="toggledropdownlogin" class="font-medium hover:text-slate-200 text-white" to="/login?role=staff">Staff Login</NuxtLink>
+                        <NuxtLink @click="toggledropdownlogin" class="font-medium hover:text-slate-200 text-white" to="/login?role=student">Student Login</NuxtLink>
                     </div>
                 </div>
             </div>
-            <div class="relative inline-block max-[767px]:pr-12 pr-5">
-                <button type="button" @click="toggledropdownsignup" class="font-medium hover:text-slate-200">Signup</button>
-                <div v-if="dropdownsignup" class="absolute top-9 -left-2">
-                    <div class="flex flex-col gap-3 w-32 rounded-lg px-2 bg-primary">
-                    <NuxtLink @click="toggledropdownsignup" class="font-medium text-white hover:text-slate-200" to="/signup?role=student">Student Signup</NuxtLink>
-                    <NuxtLink @click="toggledropdownsignup" class="font-medium text-white hover:text-slate-200" to="/signup?role=staff">Staff Signup</NuxtLink>
+            <div class="relative inline-block w-32 bgyellow-400">
+                <button type="button" @click="toggledropdownsignup" class=" font-medium h-12 bggreen-400 hover:text-slate-200">Signup</button>
+                <div v-if="dropdownsignup" class="absolute top-12 -lef-2">
+                    <div class="flex flex-col py-4 gap-3 w-32 rounded-lg px2 bg-primary">
+                        <NuxtLink @click="toggledropdownsignup" class="font-medium text-white hover:text-slate-200" to="/signup?role=staff">Staff Signup</NuxtLink>
+                        <NuxtLink @click="toggledropdownsignup" class="font-medium text-white hover:text-slate-200" to="/signup?role=student">Student Signup</NuxtLink>
                     </div>
                 </div>
             </div>
         </div>
+
     </nav>
 
 </template>
