@@ -19,30 +19,29 @@
 </script>
 
 <template>
-    <nav class="text-white border-none flex gap-x-3 bg-primary justify-around md:justify-between w-screen items-center shadow-md mx-auto h-18 py-1 px-16">
+    <nav class="text-white border-none flex gap-x-3 bg-primary justify-between w-screen items-center shadow-md mx-auto h-18 py-1 px-6 md:px-16">
         <NuxtLink to="/" class=" flex hover:text-slate-200 flex-col items-center cursor-pointer">
             <img src="/assets/images/GraduationCap.png" class="w-8">
             <p class="font-bold">SchoolPilot</p>
         </NuxtLink>
         <!-- The parents would be display a dropdown -->
         <!-- TODO: create dropdown -->
-        <div class=" text-center bgblack w-72">
-            <div class="relative inline-block w-32 bg-red400">
-                <button type="button" @click="toggledropdownlogin" class="h-12 font-medium bg-blue400 hover:text-slate-200">Login</button>
-                <div v-if="dropdownlogin" class="absolute top-12 -lef-2">
-                    <div class="flex flex-col py-4 gap-3 w-32 rounded-lg px2 bg-primary">
-                        <!-- <div></div> -->
-                        <NuxtLink @click="toggledropdownlogin" class="font-medium hover:text-slate-200 text-white" to="/login?role=staff">Staff Login</NuxtLink>
-                        <NuxtLink @click="toggledropdownlogin" class="font-medium hover:text-slate-200 text-white" to="/login?role=student">Student Login</NuxtLink>
+        <div class=" ">
+            <div class="relative inline-block pr-20 md:pr-24">
+                <button type="button" @click="toggledropdownlogin" class="font-medium hover:text-slate-200">Login</button>
+                <div v-if="dropdownlogin" class="absolute top-9 -left-2">
+                    <div class="flex flex-col gap-3 w-32 rounded-lg px-2 bg-primary">
+                    <NuxtLink @click="toggledropdownlogin" class="font-medium hover:text-slate-200 text-white" to="/login?role=student">Student Login</NuxtLink>
+                    <NuxtLink @click="toggledropdownlogin" class="font-medium hover:text-slate-200 text-white" to="/login?role=staff">Staff Login</NuxtLink>
                     </div>
                 </div>
             </div>
-            <div class="relative inline-block w-32 bgyellow-400">
-                <button type="button" @click="toggledropdownsignup" class=" font-medium h-12 bggreen-400 hover:text-slate-200">Signup</button>
-                <div v-if="dropdownsignup" class="absolute top-12 -lef-2">
-                    <div class="flex flex-col py-4 gap-3 w-32 rounded-lg px2 bg-primary">
-                        <NuxtLink @click="toggledropdownsignup" class="font-medium text-white hover:text-slate-200" to="/signup?role=staff">Staff Signup</NuxtLink>
-                        <NuxtLink @click="toggledropdownsignup" class="font-medium text-white hover:text-slate-200" to="/signup?role=student">Student Signup</NuxtLink>
+            <div class="relative inline-block max-[767px]:pr-12 pr-5">
+                <button type="button" @click="toggledropdownsignup" class="font-medium hover:text-slate-200">Signup</button>
+                <div v-if="dropdownsignup" class="absolute top-9 -left-2">
+                    <div class="flex flex-col gap-3 w-32 rounded-lg px-2 bg-primary">
+                    <NuxtLink @click="toggledropdownsignup" class="font-medium text-white hover:text-slate-200" to="/signup?role=student">Student Signup</NuxtLink>
+                    <NuxtLink @click="toggledropdownsignup" class="font-medium text-white hover:text-slate-200" to="/signup?role=staff">Staff Signup</NuxtLink>
                     </div>
                 </div>
             </div>

@@ -5,7 +5,7 @@
     <div v-if="student">
       <div class="rounded-lg shadow-md bg-white p-4">
         
-        <div class="flex justify-between items-center mb-4">
+        <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-4 gap-y-3">
           <div class="flex items-center">
             <div class="rounded-full w-48 h-48 overflow-hidden mr-4">
               <img :src="imageSrc" class="w-full h-full object-cover" />
