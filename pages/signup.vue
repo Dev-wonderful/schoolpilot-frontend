@@ -26,6 +26,7 @@
     function onSubmit(){
         if (!isValidEmail.value) {
             alert("Please enter a valid email address")
+            return
         }
         const formData = {
             email: userEmail.value,
@@ -73,12 +74,12 @@
                 <p class="font-bold text-primary">SchoolPilot</p>
             </div>
             <div class="flex flex-col items-center justify-center">
-                <form @submit.prevent="onSubmit" @keypress.enter="onSubmit" class="flex flex-col items-center justify-center">
+                <form @submit.prevent="onSubmit" @keyup.enter="onSubmit" class="flex flex-col items-center justify-center">
                     <input type="text" v-model="firstname" placeholder="FirstName" required 
                            class="border valid:border-green-400 invalid:brder-red-400 focus:outline-none border-primary focus:border-[#3c005a] rounded-xl w-72 h-12 mb-4 px-4" />
                     <input type="email" id="email" v-model="userEmail" @input="validateEmail" placeholder="Email" required 
                            class="focus:outline-none focus:border-[#3c005a] valid:border-green-400 invalid:brder-red-400 border border-primary rounded-xl w-72 h-12 mb-4 px-4">
-                    <button type="submit" class="bg-primary rounded-xl text-white py-4 font-bold  text-2xl mb-4 w-72 text-center" to="/loginPage">Activate Account</button>
+                    <button type="submit" class="bg-primary rounded-xl text-white py-4 font-bold  text-2xl mb-4 w-72 text-center">Activate Account</button>
                 </form>
             </div>
         </div>

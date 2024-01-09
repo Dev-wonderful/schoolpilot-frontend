@@ -32,8 +32,8 @@
                 <div v-if="dropdownlogin" class="absolute top-12 -lef-2">
                     <div class="flex flex-col py-4 gap-3 w-32 rounded-lg px2 bg-primary">
                         <!-- <div></div> -->
-                        <NuxtLink @click="toggledropdownlogin" class="font-medium hover:text-slate-200 text-white" to="/login?role=staff">Staff Login</NuxtLink>
-                        <NuxtLink @click="toggledropdownlogin" class="font-medium hover:text-slate-200 text-white" to="/login?role=student">Student Login</NuxtLink>
+                        <a @click="toggledropdownlogin" class="font-medium hover:text-slate-200 text-white" href="/login?role=staff">Staff Login</a>
+                        <a @click="toggledropdownlogin" class="font-medium hover:text-slate-200 text-white" href="/login?role=student">Student Login</a>
                     </div>
                 </div>
             </div>
@@ -41,8 +41,8 @@
                 <button type="button" @click="toggledropdownsignup" class=" font-medium h-12 hover:text-slate-200">Signup</button>
                 <div v-if="dropdownsignup" class="absolute top-12 -lef-2">
                     <div class="flex flex-col py-4 gap-3 w-32 rounded-lg px2 bg-primary">
-                        <NuxtLink @click="toggledropdownsignup" class="font-medium text-white hover:text-slate-200" to="/signup?role=staff">Staff Signup</NuxtLink>
-                        <NuxtLink @click="toggledropdownsignup" class="font-medium text-white hover:text-slate-200" to="/signup?role=student">Student Signup</NuxtLink>
+                        <a @click="toggledropdownsignup" class="font-medium text-white hover:text-slate-200" href="/signup?role=staff">Staff Signup</a>
+                        <a @click="toggledropdownsignup" class="font-medium text-white hover:text-slate-200" href="/signup?role=student">Student Signup</a>
                     </div>
                 </div>
             </div>

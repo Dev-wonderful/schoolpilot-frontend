@@ -13,16 +13,12 @@
 
     const route = useRoute();
     const { role } = route.query;
+    console.log('role:', role)
     const roleState = ref(role as string)
     const matricNo = ref('');
     const password = ref('');
-    // const isValidEmail = ref(false);
     const passwordPattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$";
     
-    // function validateEmail() {
-    //     const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    //     isValidEmail.value = emailRegex.test(userEmail.value);
-    // }
     function onSubmit(){
         const userCredentials = `${matricNo.value}:${password.value}`
         // convert to Base64
@@ -87,7 +83,7 @@
                 <p class="font-bold text-primary">SchoolPilot</p>
             </div>
             <div class="flex flex-col items-center justify-center">
-                <form @submit.prevent="onSubmit" @keypress.enter="onSubmit" class="flex flex-col gap-y-4 items-center justify-center">
+                <form @submit.prevent="onSubmit" @keyup.enter="onSubmit" class="flex flex-col gap-y-4 items-center justify-center">
                     <input type="text" id="matric-no" v-model="matricNo" :placeholder="roleState === 'student' ? 'Matric Number': 'Staff ID'" required 
                            class="focus:outline-none focus:border-[#3c005a] valid:border-green-400 invalid:border-red-400 border border-primary rounded-xl w-72 h-12 px-4">
                     <input type="password" v-model="password" placeholder="Password" :pattern="passwordPattern" required 
