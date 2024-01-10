@@ -42,3 +42,10 @@ export const useMakeRequest = (request: string, method: requestMethod = 'GET', b
         })
     )
 }
+/**
+ * Delay the navigation to a page briefly for any reason
+ * @param {string} navPath The navigation link
+ */
+export const useDelayNavigationBriefly = useDebounceFn((navPath: string) => {
+    navigateTo(navPath);
+}, 2000)

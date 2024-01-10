@@ -31,3 +31,15 @@ export interface NewScheduleType extends ScheduleObjType{
 export interface CustomError extends Error {
     statusCode: number
 }
+export interface LoginData {
+    email: string,
+    message: string,
+    xToken: string,
+}
+export interface ActivationData extends LoginData {
+}
+export interface AccountActivationData {
+    email: string,
+    message: string,
+    token: string
+}
