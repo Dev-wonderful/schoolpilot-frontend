@@ -79,7 +79,7 @@
             </div>
             <NuxtLoadingIndicator />
             <div class="flex flex-col items-center justify-center">
-                <form @submit.prevent="onSubmit" @keypress.enter="onSubmit" class="flex flex-col items-center gap-y-4 justify-center">
+                <form @submit.prevent="onSubmit" class="flex flex-col items-center gap-y-4 justify-center">
 
                     <input type="text" v-model="token" placeholder="Enter Token" minlength="6" maxlength="6"
                            class="border valid:border-green-400 invalid:border-red-400 focus:outline-none border-primary focus:border-[#3c005a] rounded-xl w-72 h-12 px-4" required/>

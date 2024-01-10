@@ -4,13 +4,7 @@
         layout: 'home'
     })
 
-    import type { CustomError } from '~/types'
-
-    type loginData = {
-        email: string,
-        message: string,
-        xToken: string
-    }
+    import type { CustomError, LoginData } from '~/types'
 
     const route = useRoute();
     const { role } = route.query;
@@ -19,6 +13,8 @@
     const matricNo = ref('');
     const password = ref('');
     const passwordPattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$";
+    let numberOfTries = 0
+    const MAX_RETRIES = 3
     
     function onSubmit(){
         const userCredentials = `${matricNo.value}:${password.value}`
@@ -34,22 +30,17 @@
         };
         console.log(formData)
         
+        const toastId = toast.loading('Please wait...', { autoClose: 2000 })
         const requestEndpoint = `/${role as string}portal/login`;
         useMakeRequest(requestEndpoint, 'POST', undefined, true, BasicAuthHeader)
         .then((response) => {
-            // console.log('Data:', response.data.value)
-            // console.log('Error:', (response.error.value as CustomError)?.statusCode)
             const status = response.status.value
-            // console.log(status)
+            numberOfTries++
             if (status === 'success') {
-                // console.log('successful')
                 return response.data.value
-                
             } else if (status === 'error') {
                 const statusCode = (response.error.value as CustomError)?.statusCode
-                console.log('error')
                 if (statusCode === 401) {
-                    // console.log('throw error')
                     throw new Error('Sorry invalid credentials')
                 } else {
                     throw new Error('Forbidden')
@@ -57,26 +48,35 @@
             }
         })
         .then((response) => {
+            toast.update(toastId, {
+                render: 'Login Successful',
+                autoClose: true,
+                closeOnClick: true,
+                closeButton: true,
+                type: 'success',
+                isLoading: false,
+            })
             console.log('loggedin response:', response)
-            // email.value = (response as ActivationData).email
-            document.cookie = `xToken=${(response as loginData)?.xToken}`
-            setTimeout(() => toast.success('login successful', { autoClose: 2000 }), 1000)
-            navigateTo('/dashboard');
+            document.cookie = `xToken=${(response as LoginData)?.xToken}`
+            document.cookie = `userData=${response}`
+            useDelayNavigationBriefly('/dashboard');
         })
         .catch((error: Error) => {
-            //alert(error.message);
-            setTimeout(() => toast.error(`${error.message} redirected to activate account`, {autoClose: 2000}), 1000);
-            navigateTo(`/signup?role=${role as string}`)
+            toast.update(toastId, {
+                render: 'Login Failed',
+                autoClose: true,
+                closeOnClick: true,
+                closeButton: true,
+                type: "error",
+                isLoading: false,
+            })
+            toast.done(toastId)
+            if (numberOfTries >= MAX_RETRIES) {
+                setTimeout(() => toast.error("You've been redirected to activate your account\nIf you feel this is a mistake, contact your Admin", {autoClose: 2000}), 1000);
+                navigateTo(`/signup?role=${role as string}`)
+            } else toast.error(`${error.message}`, {autoClose: 2000})
         })
-        
-        // console.log('nothing')
-        // func(name=value)
     }
-    console.log('student:', role === 'student' ? 'Matric Number': 'Staff ID')
-    watch(roleState, (newRole) => {
-        console.log('new role', newRole)
-        location.reload()
-    })
 </script>
 
 <template>
@@ -87,10 +87,10 @@
                 <p class="font-bold text-primary">SchoolPilot</p>
             </div>
             <div class="flex flex-col items-center justify-center">
-                <form @submit.prevent="onSubmit" @keyup.enter="onSubmit" class="flex flex-col gap-y-4 items-center justify-center">
+                <form @submit.prevent="onSubmit" class="flex flex-col gap-y-4 items-center justify-center">
                     <input type="text" id="matric-no" v-model="matricNo" :placeholder="roleState === 'student' ? 'Matric Number': 'Staff ID'" required 
                            class="focus:outline-none focus:border-[#3c005a] valid:border-green-400 invalid:border-red-400 border border-primary rounded-xl w-72 h-12 px-4">
-                    <input type="password" v-model="password" placeholder="Password" :pattern="passwordPattern" required 
+                    <input type="password" v-model="password" placeholder="Password" :pattern="passwordPattern" required autocomplete="current-password"
                            class="border valid:border-green-400 invalid:border-red-400 focus:outline-none border-primary focus:border-[#3c005a] rounded-xl w-72 h-12 px-4" />
                     <div class="clickables flex flex-col gap-1">
                         <button type="submit" class="bg-primary rounded-xl text-white py-4 font-bold  text-2xl mb-4 w-72 text-center">Login</button>

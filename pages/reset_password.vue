@@ -4,6 +4,7 @@
     })
 
     import type { CustomError } from '~/types'
+    import { toast } from 'vue3-toastify';
 
     const { email, role } = storeToRefs(useDashboardUpdateStore())
 
@@ -24,9 +25,6 @@
     const ID = ref('');
     const isValidEmail = ref(false)
 
-    // conditionalId = {
-    //     'student'
-    // }
     
     function validateEmail() {
         const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -34,7 +32,7 @@
     }
     function onSubmit(){
         if (!isValidEmail.value) {
-            alert("Please enter a valid email address")
+            toast.warning("Please enter a valid email address", {autoClose: 3000})
             return
         }
         const formData: ResetPassword = {
@@ -45,7 +43,7 @@
         else formData.staffId = ID.value;
 
         console.log(formData);
-        
+        const toastId = toast.loading('Please wait...', { autoClose: 3000 })
         const requestEndpoint = `/${userRole}portal/resetpassword`;
         useMakeRequest(requestEndpoint, 'POST', JSON.stringify(formData), true).then((response) => {
             // console.log('Data:', response.data.value)
@@ -64,14 +62,30 @@
             }
         })
         .then((response) => {
+            toast.update(toastId, {
+                render: 'Check your mail for your reset token\n\nClick to clear this message',
+                autoClose: false,
+                closeOnClick: true,
+                closeButton: true,
+                type: 'success',
+                isLoading: false,
+            })
             console.log('reset password:', response)
             email.value = (response as ActivationData)?.email;
             role.value = userRole as string
-            navigateTo('/set_newpassword')
+            useDelayNavigationBriefly('/set_newpassword')
         })
         .catch((error: Error) => {
-            alert(error.message);
-            navigateTo('/');
+            toast.update(toastId, {
+                render: `${error.message}`,
+                autoClose: true,
+                closeOnClick: true,
+                closeButton: true,
+                type: "error",
+                isLoading: false,
+            })
+            useDelayNavigationBriefly('/');
+            toast.done(toastId)
         })
         
         // console.log('nothing')
@@ -86,7 +100,7 @@
                 <p class="font-bold text-primary">SchoolPilot</p>
             </div>
             <div class="flex flex-col items-center justify-center">
-                <form @submit.prevent="onSubmit" @keypress.enter="onSubmit" class="flex flex-col items-center justify-center">
+                <form @submit.prevent="onSubmit" class="flex flex-col items-center justify-center">
                     <input type="text" v-model="ID" :placeholder="`${userRole} ID`" required 
                            class="border valid:border-green-400 invalid:brder-red-400 focus:outline-none border-primary focus:border-[#3c005a] rounded-xl w-72 h-12 mb-4 px-4" />
                     <input type="email" id="email" v-model="userEmail" @input="validateEmail" placeholder="Email" required 

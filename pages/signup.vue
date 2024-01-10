@@ -1,24 +1,19 @@
 <script lang="ts" setup>
-    import { toast } from 'vue3-toastify';
     definePageMeta({
         layout: 'home'
     })
-
-    import type { CustomError } from '~/types'
-
+    
+    import { toast } from 'vue3-toastify';
+    import type { CustomError, AccountActivationData } from '~/types'
+    
     const { email, role } = storeToRefs(useDashboardUpdateStore())
-
-    type ActivationData = {
-        email: string,
-        message: string,
-        token: string
-    }
-
-    const route = useRoute()
-    const { role: userRole } = route.query
+    const route = useRoute();
+    const { role: userRole } = route.query;
     const userEmail = ref('');
     const firstname = ref('');
-    const isValidEmail = ref(false)
+    const isValidEmail = ref(false);
+    let numberOfTries = 0;
+    const MAX_RETRIES = 3;
     
     function validateEmail() {
         const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -26,7 +21,9 @@
     }
     function onSubmit(){
         if (!isValidEmail.value) {
-            alert("Please enter a valid email address")
+            toast.warning("Please enter a valid email address", {
+                autoClose: 3000
+            });
             return
         }
         const formData = {
@@ -34,39 +31,52 @@
             firstName: firstname.value,
         };
         console.log(formData)
-        
+        const toastId = toast.loading('Please wait...', { autoClose: 3000 })
         const requestEndpoint = `/${userRole}portal/signin`;
-        useMakeRequest(requestEndpoint, 'POST', JSON.stringify(formData), true).then((response) => {
-            // console.log('Data:', response.data.value)
-            // console.log('Error:', (response.error.value as CustomError)?.statusCode)
+        useMakeRequest(requestEndpoint, 'POST', JSON.stringify(formData), true)
+        .then((response) => {
+            numberOfTries++;
             const status = response.status.value;
-            // console.log(status)
             if (status === 'success') {
-                // console.log('successful')
                 return response.data.value;
             } else if (status === 'error') {
                 const statusCode = (response.error.value as CustomError)?.statusCode
                 if (statusCode === 400) {
-                    // console.log('throw error')
                     throw new Error('Sorry your request was not successful, This may be due to invalid credentials')
                 } else throw new Error('Forbidden');
             }
         })
         .then((response) => {
+            toast.update(toastId, {
+                render: 'Check your mail for your activation token\n\nClick to clear this message',
+                autoClose: false,
+                closeOnClick: true,
+                closeButton: true,
+                type: 'success',
+                isLoading: false,
+            })
             console.log('activation response:', response);
-            email.value = (response as ActivationData)?.email;
+            email.value = (response as AccountActivationData)?.email;
             role.value = userRole as string;
-            navigateTo('/account_activation');
+            useDelayNavigationBriefly('/account_activation');
         })
         .catch((error: Error) => {
-           // alert(error.message);
-            //navigateTo('/');
-            toast.error(`${error.message}`, {
-            position: toast.POSITION.TOP_CENTER, autoClose: 3000
-            });
+            toast.update(toastId, {
+                render: `${error.message}`,
+                autoClose: true,
+                closeOnClick: true,
+                closeButton: true,
+                type: "error",
+                isLoading: false,
+            })
+            toast.done(toastId)
+            if (numberOfTries >= MAX_RETRIES) {
+                toast.info('Please contact the Admin for help with your account activation', {
+                    autoClose: 3000
+                });
+                useDelayNavigationBriefly('/');
+            };
         })
-        
-        // console.log('nothing')
     }
 </script>
 
@@ -78,7 +88,7 @@
                 <p class="font-bold text-primary">SchoolPilot</p>
             </div>
             <div class="flex flex-col items-center justify-center">
-                <form @submit.prevent="onSubmit" @keyup.enter="onSubmit" class="flex flex-col items-center justify-center">
+                <form @submit.prevent="onSubmit" class="flex flex-col items-center justify-center">
                     <input type="text" v-model="firstname" placeholder="FirstName" required 
                            class="border valid:border-green-400 invalid:brder-red-400 focus:outline-none border-primary focus:border-[#3c005a] rounded-xl w-72 h-12 mb-4 px-4" />
                     <input type="email" id="email" v-model="userEmail" @input="validateEmail" placeholder="Email" required 
