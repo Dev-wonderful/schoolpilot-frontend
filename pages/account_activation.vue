@@ -3,10 +3,11 @@
         layout: 'login'
     })
 
-    import type { CustomError, ActivationData } from '~/types'
+    import type { CustomError, ActivationData, StudentResponseData } from '~/types'
     import { toast } from 'vue3-toastify';
 
     const { email, role } = storeToRefs(useDashboardUpdateStore())
+    const { studentDetails } = storeToRefs(useStudentPortalStore())
 
     const password = ref('');
     const confirmPassword = ref('');
@@ -58,7 +59,8 @@
                 } else throw new Error('Server Error, Try again later');
             }
         })
-        .then((response) => {
+        .then((responseData) => {
+            const response = responseData as StudentResponseData
             toast.update(toastId, {
                 render: 'Activation successful, you have been logged into your account',
                 autoClose: true,
@@ -68,7 +70,9 @@
                 isLoading: false,
             })
             console.log('validation response:', response)
-            document.cookie = `xToken=${(response as ActivationData).xToken}`
+            document.cookie = `xToken=${response.xToken}`
+            document.cookie = `userData=${JSON.stringify(response)}`
+            studentDetails.value = response
             useDelayNavigationBriefly(`/dashboard`)
         })
         .catch((error: Error) => {

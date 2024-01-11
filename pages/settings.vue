@@ -11,9 +11,10 @@
               <img :src="imageSrc" class="w-full h-full object-cover" />
             </div>
             <div>
-              <h2 class="text-2xl font-bold">{{ student.firstName }}</h2>
+              <h2 class="text-2xl font-bold my-2">{{ student.firstName }}</h2>
               <p class="font-medium text-lg">ID: {{ student.matricNo }}</p>
-              <p class="font-medium text-lg">Dept: {{ student.department }}</p>
+              <p class="font-medium text-lg">Dept: {{ student.major }}</p>
+              <p class="font-medium text-lg">Level: {{ student.level }}</p>
             </div>
           </div>
           <div>
@@ -22,7 +23,7 @@
         </div>
         
         <div :class="divperson">
-          <span class="text-lg font-bold">Full Name: </span><span class="font-medium">{{ student.lastName }} {{ student.firstName  }} {{ student.middleName  }} </span>
+          <span class="text-lg font-bold">Full Name: </span><span class="font-medium">{{ student.lastName }} {{ student.firstName  }} {{ student.middleName ? student.middleName : ''  }} </span>
         </div>
         <div :class="divperson">
           <span class="text-lg font-bold">Gender: </span><span class="font-medium">{{ student.gender }} </span>
@@ -30,20 +31,25 @@
         <div :class="divperson">
           <span class="text-lg font-bold">Date of Birth: </span><span class="font-medium">{{ student.DOB }} </span>
         </div>
-        <div :class="divperson">
+        <div v-if="student.nationality" :class="divperson">
           <span class="text-lg font-bold">Nationality: </span><span class="font-medium">{{ student.nationality }} </span>
         </div>
-        <div :class="divperson">
+        <div v-if="student.stateOfOrigin" :class="divperson">
           <span class="text-lg font-bold">State of Origin: </span><span class="font-medium">{{ student.stateOfOrigin }} </span>
         </div>
-        <div :class="divperson">
+        <div v-if="student.phone" :class="divperson">
           <span class="text-lg font-bold">Phone number: </span><span class="font-medium">{{ student.phone }} </span>
         </div>
-
         <div :class="divperson">
-          <span class="text-lg font-bold">Next of Kin: </span><span class="font-medium">{{ student.NextOfKin }} </span>
+          <span class="text-lg font-bold">Email: </span><span class="font-medium">{{ student.email }} </span>
         </div>
         <div :class="divperson">
+          <span class="text-lg font-bold">Type: </span><span class="font-medium">{{ student.type }} </span>
+        </div>
+        <div v-if="student.NextOfKin" :class="divperson">
+          <span class="text-lg font-bold">Next of Kin: </span><span class="font-medium">{{ student.NextOfKin }} </span>
+        </div>
+        <div v-if="student.NextOfKincontact" :class="divperson">
           <span class="text-lg font-bold">contact of Next of Kin: </span><span class="font-medium">{{ student.NextOfKincontact }} </span>
         </div>
       </div>
@@ -56,10 +62,13 @@
 
 
 <script setup>
-const { name, avatar } = storeToRefs(useDashboardUpdateStore());
+// const { name, avatar } = storeToRefs(useDashboardUpdateStore());
+const { studentPersonalDetails, avatar } = storeToRefs(useStudentPortalStore());
 const imageSrc = avatar.value ? avatar.value : '/images/Frame.png';
-const student = ref({firstName: 'Nathan',matricNo: '1246465', NextOfKin: 'Wonderful', NextOfKincontact:'0807353788', lastName:'John', middleName: 'Ebuka', department:'computer sci',gender: 'male', DOB: '01/22/2022', nationality: 'Nigeria', stateOfOrigin:'Lagos', LGA: 'Lekki', phone: '09033338339', email: 'onwuka@gmail.com', bio:"Travel, Music, Photography"});
-
+// const student = ref({firstName: 'Nathan',matricNo: '1246465', NextOfKin: 'Wonderful', NextOfKincontact:'0807353788', lastName:'John', middleName: 'Ebuka', department:'computer sci',gender: 'male', DOB: '01/22/2022', nationality: 'Nigeria', stateOfOrigin:'Lagos', LGA: 'Lekki', phone: '09033338339', email: 'onwuka@gmail.com', bio:"Travel, Music, Photography"});
+const student = {...studentPersonalDetails.value}
+student.DOB = useDateFormat(student.DOB, 'Do of MMMM, YYYY').value
+student.type = student.type === 'UG' ? 'Undergraduate' : 'PostGraduate';
 const divperson ="p-4 mx-auto shadow-lg rounded-sm w-full mb-3"
 
 // const fetchStudentData = async () => {

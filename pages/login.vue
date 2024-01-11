@@ -1,13 +1,14 @@
 <script lang="ts" setup>
-    import { toast } from 'vue3-toastify';
     definePageMeta({
         layout: 'home'
     })
-
-    import type { CustomError, LoginData } from '~/types'
+    
+    import { toast } from 'vue3-toastify';
+    import type { CustomError, StudentResponseData } from '~/types'
 
     const route = useRoute();
     const { role } = route.query;
+    const { studentDetails } = storeToRefs(useStudentPortalStore())
     console.log('role:', role)
     const roleState = ref(role as string)
     const matricNo = ref('');
@@ -47,7 +48,8 @@
                 }
             }
         })
-        .then((response) => {
+        .then((responseData) => {
+            const response = responseData as StudentResponseData
             toast.update(toastId, {
                 render: 'Login Successful',
                 autoClose: true,
@@ -57,8 +59,9 @@
                 isLoading: false,
             })
             console.log('loggedin response:', response)
-            document.cookie = `xToken=${(response as LoginData)?.xToken}`
-            document.cookie = `userData=${response}`
+            document.cookie = `xToken=${response?.xToken}`
+            document.cookie = `userData=${JSON.stringify(response)}`
+            studentDetails.value = response
             useDelayNavigationBriefly('/dashboard');
         })
         .catch((error: Error) => {

@@ -3,15 +3,11 @@
         layout: 'login'
     })
 
-    import type { CustomError } from '~/types'
+    import type { CustomError, StudentResponseData } from '~/types'
     import { toast } from 'vue3-toastify';
 
-    type ActivatiioResponseData = {
-        email: string,
-        message: string,
-        xToken: string
-    }
     const { email, role } = storeToRefs(useDashboardUpdateStore())
+    const { studentDetails } = storeToRefs(useStudentPortalStore())
 
     const password = ref('');
     const confirmPassword = ref('');
@@ -81,7 +77,8 @@
                 isLoading: false,
             })
             console.log('validation response:', response)
-            document.cookie = `xToken=${(response as ActivatiioResponseData)?.xToken}`
+            document.cookie = `xToken=${(response as StudentResponseData)?.xToken}`
+            studentDetails.value = response as StudentResponseData
             useDelayNavigationBriefly(`/dashboard`)
         })
         .catch((error: Error) => {
