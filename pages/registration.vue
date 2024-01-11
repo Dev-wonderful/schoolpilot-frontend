@@ -1,4 +1,5 @@
 <script setup>
+    const { studentDetails } = storeToRefs(useStudentPortalStore());
     const courseData = [
         {
             "_id": "858d87ba4bedb05e8a76a7a9",

@@ -43,10 +43,10 @@ export interface AccountActivationData {
     message: string,
     token: string
 }
-export type Status = 'active' | 'inactive'
+export type Status = 'active' | 'init' | 'deactivated'
 export type Gender = 'Female' | 'Male'
-export type Role = 'Student' | 'Staff'
-export type Level = '100' | '200' | '300' | '400' | '500'
+export type Role = 'Student' | 'Lecturer' | 'HOD' | 'Dean' | 'Admin' | 'SuperAdmin'
+export type Level = 100 | 200 | 300 | 400 | 500 | 600
 export type DegreeLevel = 'UG' | 'PG'
 export type Semester = 1 | 2
 export type CourseUnit = 1 | 2 | 3 | 4

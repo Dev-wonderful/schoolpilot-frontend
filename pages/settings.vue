@@ -3,7 +3,7 @@
     <h1 class="text-3xl font-bold mb-4">My Profile</h1>
 
     <div v-if="student">
-      <div class="rounded-lg shadow-md bg-white p-4">
+      <div class="rounded-lg shadow-md my-5 bg-white p-4">
         
         <div class="flex flex-col md:flex-row md:justify-between md:items-center mb-4 gap-y-3">
           <div class="flex items-center">
@@ -12,9 +12,9 @@
             </div>
             <div>
               <h2 class="text-2xl font-bold my-2">{{ student.firstName }}</h2>
-              <p class="font-medium text-lg">ID: {{ student.matricNo }}</p>
-              <p class="font-medium text-lg">Dept: {{ student.major }}</p>
-              <p class="font-medium text-lg">Level: {{ student.level }}</p>
+              <p class="font-medium text-lg"><strong>ID:</strong> {{ student.matricNo }}</p>
+              <p class="font-medium text-lg"><strong>Dept:</strong> {{ student.major }}</p>
+              <p class="font-medium text-lg"><strong>Level:</strong> {{ student.level }}</p>
             </div>
           </div>
           <div>
@@ -31,14 +31,14 @@
         <div :class="divperson">
           <span class="text-lg font-bold">Date of Birth: </span><span class="font-medium">{{ student.DOB }} </span>
         </div>
-        <div v-if="student.nationality" :class="divperson">
-          <span class="text-lg font-bold">Nationality: </span><span class="font-medium">{{ student.nationality }} </span>
+        <div :class="divperson">
+          <span class="text-lg font-bold">Nationality: </span><span class="font-medium">{{ student.nationality ? student.nationality : 'N/A' }} </span>
         </div>
-        <div v-if="student.stateOfOrigin" :class="divperson">
-          <span class="text-lg font-bold">State of Origin: </span><span class="font-medium">{{ student.stateOfOrigin }} </span>
+        <div :class="divperson">
+          <span class="text-lg font-bold">State of Origin: </span><span class="font-medium">{{ student.stateOfOrigin ? student.stateOfOrigin : 'N/A' }} </span>
         </div>
-        <div v-if="student.phone" :class="divperson">
-          <span class="text-lg font-bold">Phone number: </span><span class="font-medium">{{ student.phone }} </span>
+        <div :class="divperson">
+          <span class="text-lg font-bold">Phone number: </span><span class="font-medium">{{ student.phone ? student.phone : 'N/A' }} </span>
         </div>
         <div :class="divperson">
           <span class="text-lg font-bold">Email: </span><span class="font-medium">{{ student.email }} </span>
@@ -46,11 +46,11 @@
         <div :class="divperson">
           <span class="text-lg font-bold">Type: </span><span class="font-medium">{{ student.type }} </span>
         </div>
-        <div v-if="student.NextOfKin" :class="divperson">
-          <span class="text-lg font-bold">Next of Kin: </span><span class="font-medium">{{ student.NextOfKin }} </span>
+        <div :class="divperson">
+          <span class="text-lg font-bold">Next of Kin: </span><span class="font-medium">{{ student.NextOfKin ? student.NextOfKin : 'N/A' }} </span>
         </div>
-        <div v-if="student.NextOfKincontact" :class="divperson">
-          <span class="text-lg font-bold">contact of Next of Kin: </span><span class="font-medium">{{ student.NextOfKincontact }} </span>
+        <div :class="divperson">
+          <span class="text-lg font-bold">contact of Next of Kin: </span><span class="font-medium">{{ student.NextOfKincontact ? student.NextOfKincontact : 'N/A' }} </span>
         </div>
       </div>
     </div>
