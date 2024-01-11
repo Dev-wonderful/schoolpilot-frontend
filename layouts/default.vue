@@ -1,5 +1,5 @@
 <template>
-  <div class="grid-container ">
+  <div class="grid-container overflow-hidden">
     <!-- Navbar -->
     <div class="header"><Navbar /></div>
     <!-- Aside -->
