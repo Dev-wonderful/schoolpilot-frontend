@@ -3,16 +3,11 @@
         layout: 'home'
     })
 
-    import type { CustomError } from '~/types'
+    import type { CustomError, AccountActivationData } from '~/types'
     import { toast } from 'vue3-toastify';
 
     const { email, role } = storeToRefs(useDashboardUpdateStore())
 
-    type ActivationData = {
-        email: string,
-        message: string,
-        token: string
-    }
     type ResetPassword = {
         email: string,
         matricNo?: string
@@ -24,6 +19,8 @@
     const userEmail = ref('');
     const ID = ref('');
     const isValidEmail = ref(false)
+    let numberOfTries = 0
+    const MAX_RETRIES = 2
 
     
     function validateEmail() {
@@ -33,6 +30,7 @@
     function onSubmit(){
         if (!isValidEmail.value) {
             toast.warning("Please enter a valid email address", {autoClose: 3000})
+
             return
         }
         const formData: ResetPassword = {
@@ -43,20 +41,17 @@
         else formData.staffId = ID.value;
 
         console.log(formData);
-        const toastId = toast.loading('Please wait...', { autoClose: 3000 })
+        const toastId = toast.loading('Please wait...', { autoClose: 1500 })
         const requestEndpoint = `/${userRole}portal/resetpassword`;
-        useMakeRequest(requestEndpoint, 'POST', JSON.stringify(formData), true).then((response) => {
-            // console.log('Data:', response.data.value)
-            // console.log('Error:', (response.error.value as CustomError)?.statusCode)
+        useMakeRequest(requestEndpoint, 'POST', JSON.stringify(formData), true)
+        .then((response) => {
+            numberOfTries++
             const status = response.status.value;
-            // console.log(status)
             if (status === 'success') {
-                // console.log('successful')
                 return response.data.value
             } else if (status === 'error') {
                 const statusCode = (response.error.value as CustomError)?.statusCode;
                 if (statusCode === 400) {
-                    // console.log('throw error')
                     throw new Error('Sorry your request was not successful,\nTry again later or reach out to your admin if this persists\nThis may be due to invalid credentials')
                 } else throw new Error('Forbidden');
             }
@@ -71,7 +66,7 @@
                 isLoading: false,
             })
             console.log('reset password:', response)
-            email.value = (response as ActivationData)?.email;
+            email.value = (response as AccountActivationData)?.email;
             role.value = userRole as string
             useDelayNavigationBriefly('/set_newpassword')
         })
@@ -84,11 +79,15 @@
                 type: "error",
                 isLoading: false,
             })
-            useDelayNavigationBriefly('/');
             toast.done(toastId)
+            if (numberOfTries >= MAX_RETRIES) {
+                toast.info('Redirecting you...', { autoClose: 1000})
+                useDelayNavigationBriefly('/');
+            }
+            // Clear all inputs
+            userEmail.value = '';
+            ID.value = '';
         })
-        
-        // console.log('nothing')
     }
 </script>
 
@@ -101,7 +100,7 @@
             </div>
             <div class="flex flex-col items-center justify-center">
                 <form @submit.prevent="onSubmit" class="flex flex-col items-center justify-center">
-                    <input type="text" v-model="ID" :placeholder="`${userRole} ID`" required 
+                    <input type="text" v-model="ID" :placeholder="userRole === 'student' ? 'Matric Number': 'Staff ID'" required 
                            class="border valid:border-green-400 invalid:brder-red-400 focus:outline-none border-primary focus:border-[#3c005a] rounded-xl w-72 h-12 mb-4 px-4" />
                     <input type="email" id="email" v-model="userEmail" @input="validateEmail" placeholder="Email" required 
                            class="focus:outline-none focus:border-[#3c005a] valid:border-green-400 invalid:brder-red-400 border border-primary rounded-xl w-72 h-12 mb-4 px-4">

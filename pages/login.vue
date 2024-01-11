@@ -75,6 +75,8 @@
                 setTimeout(() => toast.error("You've been redirected to activate your account\nIf you feel this is a mistake, contact your Admin", {autoClose: 2000}), 1000);
                 navigateTo(`/signup?role=${role as string}`)
             } else toast.error(`${error.message}`, {autoClose: 2000})
+            // clear input
+            password.value = '';
         })
     }
 </script>

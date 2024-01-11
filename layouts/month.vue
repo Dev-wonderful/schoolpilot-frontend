@@ -38,8 +38,8 @@
             const { data, error } = await useMakeRequest(requestEndpoint) as ResponseType<ScheduleObjType[]>
             const responseData = data.value
             // console.log('response', responseData)
-            console.log(sortScheduleByDay(month, responseData))
-            const sortedResponseData = sortScheduleByDay(month, responseData)
+            console.log(sortScheduleByDay(month, responseData));
+            const sortedResponseData = sortScheduleByDay(month, responseData);
             if (error.value) return false;
             else {
                 if (responseData?.length > 0) {

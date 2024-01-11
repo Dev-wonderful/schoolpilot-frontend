@@ -24,6 +24,9 @@
             toast.warning("Please enter a valid email address", {
                 autoClose: 3000
             });
+            // clear input
+            userEmail.value = '';
+
             return
         }
         const formData = {
@@ -76,6 +79,9 @@
                 });
                 useDelayNavigationBriefly('/');
             };
+            // clear inputs
+            userEmail.value = '';
+            firstname.value = '';
         })
     }
 </script>
