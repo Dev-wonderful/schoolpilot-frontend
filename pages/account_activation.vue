@@ -3,7 +3,7 @@
         layout: 'login'
     })
 
-    import type { CustomError, ActivationData, StudentResponseData } from '~/types'
+    import type { CustomError, StudentResponseData } from '~/types'
     import { toast } from 'vue3-toastify';
 
     const { email, role } = storeToRefs(useDashboardUpdateStore())
@@ -72,8 +72,8 @@
             console.log('validation response:', response)
             document.cookie = `xToken=${response.xToken}`
             document.cookie = `userData=${JSON.stringify(response)}`
-            studentDetails.value = response
-            useDelayNavigationBriefly(`/dashboard`)
+            studentDetails.value = response.Dashboard
+            useDelayNavigationBriefly(`/studentportal/dashboard`)
         })
         .catch((error: Error) => {
             toast.update(toastId, {

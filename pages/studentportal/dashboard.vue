@@ -1,15 +1,18 @@
 <script lang="ts" setup>
-  import type { UpdateType, ResponseType, StudentData } from "~/types";
+    // definePageMeta({
+    //     middleware: ['auth']
+    // })
+  import type { UpdateType, ResponseType, Dashboard } from "~/types";
 
-  const { studentPersonalDetails, infoUpdates } = storeToRefs(useStudentPortalStore())
-  const STUDENT = computed(() => studentPersonalDetails.value as StudentData)
+  const { studentDetails, infoUpdates } = storeToRefs(useStudentPortalStore())
+  const STUDENT = computed(() => studentDetails.value as Dashboard)
   if (STUDENT.value.matricNo && infoUpdates.value[0].data.length === 0 && infoUpdates.value[1].data.length === 0) {
     const requestEndpoint = `/api/v1/dashboard?role=${STUDENT.value.role.toLocaleLowerCase()}&id=${STUDENT.value.matricNo}`
     const { data, error } = await useMakeRequest(requestEndpoint) as ResponseType<UpdateType[]>
     if (error.value) infoUpdates.value = [];
     else infoUpdates.value = data.value
   }
-  
+  console.log('student', STUDENT.value)
   const convertDatetimeString = (datetimeString: string) => {
     const date = new Date(datetimeString)
     const formatted = useDateFormat(date, 'h:mma on Do of MMMM YYYY')
@@ -33,7 +36,7 @@
     <section class="dashboard flex flex-col justify-around items-center w-[100%] min-h-[750px] gap-5 bg-prple-300 mx-auto my-[50px]">
       <div class="welcome shadow-md rounded-[20px] bg-primary text-white w-[90%] sm:w-[95%] h-[200px] flex flex-row justify-around items-center bg-blu-200">
         <h1 class="welcome_text w-[60%] h-[50%] text-left flex flex-col justify-center items-start bg-rd-100 sm:text-[1.2rem]">
-          Hello {{ STUDENT.firstName }} {{ STUDENT.lastName }}
+          Hello {{ STUDENT?.firstName }} {{ STUDENT?.lastName }}
         </h1>
         <div class="image-container w-[100px] h-[100px] sm:w-[130px] sm:h-[130px] md:w-[150px] md:h-[150px] bg-gray-300 rounded-[20px]"></div>
       </div>

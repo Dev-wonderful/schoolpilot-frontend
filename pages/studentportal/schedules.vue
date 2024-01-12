@@ -1,6 +1,6 @@
 <script lang="ts" setup>
     definePageMeta({
-        middleware: ['auth', 'fetch-month']
+        middleware: ['fetch-month']
     })
 </script>
 <template>

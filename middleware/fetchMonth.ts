@@ -21,10 +21,10 @@ export default defineNuxtRouteMiddleware( (to) => {
         modifiedMonthData[month] = {};
         if (dateData.length > 0) {
             dateData.forEach((element: ScheduleObjType) => {
-                const day = useDateFormat(element.scheduledTime, 'D').value
+                const day = useDateFormat(element.time, 'D').value
                 if (day in modifiedMonthData[month] === false) modifiedMonthData[month][day] = [];
                 modifiedMonthData[month][day].push(element);
-                modifiedMonthData[month][day].sort((a,b) => Date.parse(a.scheduledTime) - Date.parse(b.scheduledTime))
+                modifiedMonthData[month][day].sort((a,b) => Date.parse(a.time) - Date.parse(b.time))
             });
         }
         return modifiedMonthData

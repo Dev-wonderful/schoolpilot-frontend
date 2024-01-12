@@ -7,11 +7,14 @@ export type daysNum = {
     [month: string]: number
 }
 export interface ScheduleObjType {
+    _id: string,
     title: string,
-    scheduledTime: string,
+    time: string,
     description?: string,
-    scheduleColor?: string
+    color?: string,
+    createdAt: string
 }
+// @deprecated
 export interface ScheduleType {
     [month: string]: ScheduleObjType[]
 }
@@ -43,21 +46,18 @@ export interface AccountActivationData {
     message: string,
     token: string
 }
-export type Status = 'active' | 'init' | 'deactivated'
-export type Gender = 'Female' | 'Male'
-export type Role = 'Student' | 'Lecturer' | 'HOD' | 'Dean' | 'Admin' | 'SuperAdmin'
-export type Level = 100 | 200 | 300 | 400 | 500 | 600
-export type DegreeLevel = 'UG' | 'PG'
-export type Semester = 1 | 2
-export type CourseUnit = 1 | 2 | 3 | 4
-export interface Project {
-    lecturer: string,
-    courseCode: string,
-    topic: string,
-    link: string,
-    deadline: string
-}
-export interface UserData {
+type Status = 'active' | 'init' | 'deactivated'
+type Gender = 'Female' | 'Male'
+type Role = 'Student' | 'Lecturer' | 'HOD' | 'Dean' | 'Admin' | 'SuperAdmin'
+type Level = 100 | 200 | 300 | 400 | 500 | 600
+type DegreeLevel = 'UG' | 'PG'
+type Semester = 1 | 2
+type CourseUnit = 1 | 2 | 3 | 4
+type EntryMode = 'DE'
+type Standing = 'good'
+type Title = 'Ms' | 'Mr'
+
+interface UserData {
     _id: string,
     firstName: string,
     lastName: string,
@@ -67,32 +67,71 @@ export interface UserData {
     DOB: string,
     role: Role,
     type: DegreeLevel,
-    standing: string,
+    entryYear: number,
+    createdAt: string,
 }
-export interface BasicID {
+export interface CreatedBy {
+    _id: string,
+    department: string,
+    email: string,
+    firstName: string,
+    lastName: string,
+    staffId: string,
+    title: Title,
+    createdAt: string,
+    entryYear: number
+}
+export interface Submission {
+    student: string,
+    answer: string,
+    comment: string,
+    score: number
+}
+interface BasicID {
     _id: string,
     name: string
+}
+export interface CourseData extends BasicID {
+    courseCode: string,
+    department: string
+    level: Level,
+    semester: Semester,
+    units: CourseUnit,
+    createdAt: string
+}
+export interface Project extends BasicID {
+    info: string,
+    course: CourseData,
+    year: number,
+    deadline: string,
+    createdBy: CreatedBy,
+    submissions: Array<Submission>
 }
 export interface StudentData extends UserData {
     matricNo: string,
     level: Level,
     major: string,
-    projects: Array<Project>
+    entryMode: EntryMode,
+    standing: Standing
 }
-export interface DepartmentData extends BasicID {
+interface DepartmentData extends BasicID {
 }
-export interface FacultyData extends BasicID {
-}
-export interface CourseData extends BasicID {
-    courseCode: string,
-    level: Level,
-    semester: Semester,
-    units: CourseUnit
+interface FacultyData extends BasicID {
 }
 
-export interface StudentResponseData extends LoginData {
-    readonly studenData: StudentData,
-    readonly deptData: DepartmentData | BasicID,
-    readonly factultyData: FacultyData | BasicID,
-    readonly courseData: CourseData
+interface SortedProjectByDay {
+    [month: string]: {
+        [day: string]: Array<Project>
+    }
+}
+
+export interface Dashboard extends StudentData {
+    readonly department: DepartmentData,
+    readonly faculty: FacultyData,
+    readonly schedules: ScheduleObjType
+    readonly projects: SortedProjectByDay
+}
+
+export interface StudentResponseData extends Readonly<LoginData> {
+    readonly Dashboard: Dashboard
 }

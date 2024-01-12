@@ -1,6 +1,6 @@
 <script setup>
 // You can add any script logic or data setup here if needed
-  const { studentPersonalDetails, avatar } = storeToRefs(useStudentPortalStore())
+  const { studentDetails, avatar } = storeToRefs(useStudentPortalStore())
   const imageSrc = avatar.value ? avatar.value : '/images/Frame.png';
   const isMenuOpen = ref(false);
   const toggleMenu = () => {
@@ -9,6 +9,8 @@
   const closeMenu = () => {
     isMenuOpen.value = false;
   };
+
+  console.log('details',studentDetails.value)
 </script>
 
 <template>
@@ -27,7 +29,7 @@
 
       <NuxtLink to="/settings" class="flex items-center justify-between w-fit gap-3 h-[3rem] ml-auto mr-14">
         <img  :src="imageSrc" alt="User Avatar" class="rounded-full ml-6">
-        <span class="hidden md:block text-sm font-bold">{{ studentPersonalDetails.firstName }} {{ studentPersonalDetails.lastName }}</span>
+        <span class="hidden md:block text-sm font-bold">{{ studentDetails?.firstName }} {{ studentDetails?.lastName }}</span>
       </NuxtLink>
 
       <div class="pr-4">
