@@ -1,3 +1,27 @@
+<script setup>
+// const { name, avatar } = storeToRefs(useDashboardUpdateStore());
+const { studentPersonalDetails, avatar } = storeToRefs(useStudentPortalStore());
+const imageSrc = avatar.value ? avatar.value : '/images/Frame.png';
+// const student = ref({firstName: 'Nathan',matricNo: '1246465', NextOfKin: 'Wonderful', NextOfKincontact:'0807353788', lastName:'John', middleName: 'Ebuka', department:'computer sci',gender: 'male', DOB: '01/22/2022', nationality: 'Nigeria', stateOfOrigin:'Lagos', LGA: 'Lekki', phone: '09033338339', email: 'onwuka@gmail.com', bio:"Travel, Music, Photography"});
+const student = {...studentPersonalDetails.value}
+student.DOB = useDateFormat(student.DOB, 'Do of MMMM, YYYY').value
+student.type = student.type === 'UG' ? 'Undergraduate' : 'PostGraduate';
+const divperson ="p-4 mx-auto shadow-lg rounded-sm w-full mb-3"
+
+// const fetchStudentData = async () => {
+//   try {
+//     const response = await fetch('/api/student'); 
+//     const data = await response.json();
+//     student.value = data;
+//   } catch (error) {
+//     console.error('Error fetching student data:', error);
+//   }
+// };
+
+// fetchStudentData();
+</script>
+
+
 <template>
   <div class=" mx-auto px-4">
     <h1 class="text-3xl font-bold mb-4">My Profile</h1>
@@ -61,26 +85,5 @@
 </template>
 
 
-<script setup>
-// const { name, avatar } = storeToRefs(useDashboardUpdateStore());
-const { studentPersonalDetails, avatar } = storeToRefs(useStudentPortalStore());
-const imageSrc = avatar.value ? avatar.value : '/images/Frame.png';
-// const student = ref({firstName: 'Nathan',matricNo: '1246465', NextOfKin: 'Wonderful', NextOfKincontact:'0807353788', lastName:'John', middleName: 'Ebuka', department:'computer sci',gender: 'male', DOB: '01/22/2022', nationality: 'Nigeria', stateOfOrigin:'Lagos', LGA: 'Lekki', phone: '09033338339', email: 'onwuka@gmail.com', bio:"Travel, Music, Photography"});
-const student = {...studentPersonalDetails.value}
-student.DOB = useDateFormat(student.DOB, 'Do of MMMM, YYYY').value
-student.type = student.type === 'UG' ? 'Undergraduate' : 'PostGraduate';
-const divperson ="p-4 mx-auto shadow-lg rounded-sm w-full mb-3"
 
-// const fetchStudentData = async () => {
-//   try {
-//     const response = await fetch('/api/student'); 
-//     const data = await response.json();
-//     student.value = data;
-//   } catch (error) {
-//     console.error('Error fetching student data:', error);
-//   }
-// };
-
-// fetchStudentData();
-</script>
 
