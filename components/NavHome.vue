@@ -33,7 +33,7 @@
                     <div class="flex flex-col py-4 gap-3 w-32 rounded-lg px2 bg-primary">
                         <!-- <div></div> -->
                         <a @click="toggledropdownlogin" class="font-medium hover:text-slate-200 text-white" href="/login?role=staff">Staff Login</a>
-                        <a @click="toggledropdownlogin" class="font-medium hover:text-slate-200 text-white" href="/login?role=student">Student Login</a>
+                        <a @click="toggledropdownlogin" class="font-medium hover:text-slate-200 text-white" href="/studentportal">Student Login</a>
                     </div>
                 </div>
             </div>
