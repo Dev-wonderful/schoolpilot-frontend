@@ -27,6 +27,7 @@ export default defineEventHandler((event) => {
           ]
         }
       ]
+      console.log('role', query.role)
     if (query.role === 'student' && query.id) return data;
 
     return []

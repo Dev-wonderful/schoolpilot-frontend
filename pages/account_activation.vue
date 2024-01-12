@@ -3,10 +3,11 @@
         layout: 'login'
     })
 
-    import type { CustomError, ActivationData } from '~/types'
+    import type { CustomError, ActivationData, StudentResponseData } from '~/types'
     import { toast } from 'vue3-toastify';
 
     const { email, role } = storeToRefs(useDashboardUpdateStore())
+    const { studentDetails } = storeToRefs(useStudentPortalStore())
 
     const password = ref('');
     const confirmPassword = ref('');
@@ -26,6 +27,11 @@
             toast.warning("Your passwords do not match, please check properly", {
                 autoClose: 3000
             });
+
+            // clear the password inputs
+            password.value = '';
+            confirmPassword.value = '';
+            
             return
         }
         const userCredentials = `${email.value}:${password.value}`
@@ -48,12 +54,13 @@
                 return response.data.value
             } else if (status === 'error') {
                 const statusCode = (response.error.value as CustomError)?.statusCode
-                if (statusCode === 401) {
-                    throw new Error('Sorry invalid credentials');
-                } else throw new Error('Forbidden');
+                if (statusCode === 400) {
+                    throw new Error('Invalid Token');
+                } else throw new Error('Server Error, Try again later');
             }
         })
-        .then((response) => {
+        .then((responseData) => {
+            const response = responseData as StudentResponseData
             toast.update(toastId, {
                 render: 'Activation successful, you have been logged into your account',
                 autoClose: true,
@@ -63,8 +70,10 @@
                 isLoading: false,
             })
             console.log('validation response:', response)
-            document.cookie = `xToken=${(response as ActivationData).xToken}`
-            navigateTo(`/login?role=${role.value}`)
+            document.cookie = `xToken=${response.xToken}`
+            document.cookie = `userData=${JSON.stringify(response)}`
+            studentDetails.value = response
+            useDelayNavigationBriefly(`/dashboard`)
         })
         .catch((error: Error) => {
             toast.update(toastId, {
@@ -75,7 +84,16 @@
                 type: "error",
                 isLoading: false,
             })
-            if (numberOfTries >= MAX_RETRIES) useDelayNavigationBriefly('/');
+            toast.done(toastId)
+            if (numberOfTries >= MAX_RETRIES) {
+                toast.info('Redirecting you...', { autoClose: 1000})
+                useDelayNavigationBriefly('/');
+            }
+
+            // clear the all inputs
+            password.value = '';
+            confirmPassword.value = '';
+            token.value = '';
         })
     }
 </script>

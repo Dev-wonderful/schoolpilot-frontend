@@ -1,13 +1,16 @@
 <script lang="ts" setup>
-  import { type UpdateType, type ResponseType } from "~/types";
+  import type { UpdateType, ResponseType, StudentData } from "~/types";
 
-  let dashboardStore = useDashboardUpdateStore()
-  const { name, role, idNumber, infoUpdates } = storeToRefs(dashboardStore)
-  if (role.value && idNumber.value && infoUpdates.value.length === 0) {
-    const requestEndpoint = `/api/v1/dashboard?role=${role.value}&id=${idNumber.value}`
+  const { studentPersonalDetails, infoUpdates } = storeToRefs(useStudentPortalStore())
+  const STUDENT = computed(() => studentPersonalDetails.value as StudentData)
+  // console.log('student details', studentDetails.value)
+  if (STUDENT.value.matricNo && infoUpdates.value[0].data.length === 0 && infoUpdates.value[1].data.length === 0) {
+    console.log('called')
+    const requestEndpoint = `/api/v1/dashboard?role=${STUDENT.value.role.toLocaleLowerCase()}&id=${STUDENT.value.matricNo}`
     const { data, error } = await useMakeRequest(requestEndpoint) as ResponseType<UpdateType[]>
     if (error.value) infoUpdates.value = [];
     else infoUpdates.value = data.value
+    console.log('info update', infoUpdates.value)
   }
   const dashboardinfoStyles = {
     infoBox: 'mx-auto max-w[350px] w-[400px] h-[350px] rounded-2xl shadow-md grid grid-rows-5 grid-cols-1 justify-center items-center',
@@ -35,7 +38,7 @@
     <section class="dashboard flex flex-col justify-around items-center w-[100%] min-h-[750px] gap-5 bg-prple-300 mx-auto my-[50px]">
       <div class="welcome shadow-md rounded-[20px] bg-primary text-white w-[90%] sm:w-[95%] h-[200px] flex flex-row justify-around items-center bg-blu-200">
         <h1 class="welcome_text w-[60%] h-[50%] text-left flex flex-col justify-center items-start bg-rd-100 sm:text-[1.2rem]">
-          Hello {{ name }}
+          Hello {{ STUDENT.firstName }} {{ STUDENT.lastName }}
         </h1>
         <div class="image-container w-[100px] h-[100px] sm:w-[130px] sm:h-[130px] md:w-[150px] md:h-[150px] bg-gray-300 rounded-[20px]"></div>
       </div>
@@ -45,12 +48,14 @@
             {{ update.title }}
           </h2>
           <div class="update_content cursor-pointer" :class="dashboardinfoStyles.infoContent" 
+               v-if="update.data.length"
                v-for="datum of update.data" @click="navigate(datum.scheduledTime, datum.title)">
             <span class="w-[95%] bg-ble-200 px-1 truncate text-left mx-auto">{{ datum.title }}</span>
             <span class="w-[95%] bg-rd-200 px-1 truncate mx-auto" :title="convertDatetimeString(datum.scheduledTime)">
               {{ convertDatetimeString(datum.scheduledTime) }}
             </span>
           </div>
+          <div v-else class="text-center text-xl">Nothing to show</div>
         </div>
       </section>
     </section>

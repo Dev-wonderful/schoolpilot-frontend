@@ -1,92 +1,12 @@
 <script setup>
-const courseData = [
-        {
-            "_id": "658d87ba4bedb05e8a76a7a9",
-            "courseCode": "GST-300",
-            "name": "English Language: Lexis and Structure",
-            "level": 300,
-            "semester": 2,
-            "units": 2
-        },
-        {
-            "_id": "658d87ba4bedb05e8a76a7a9",
-            "courseCode": "GST-300",
-            "name": "English Language: Lexis and Structure",
-            "level": 300,
-            "semester": 2,
-            "units": 2
-        },
-        {
-            "_id": "658d87ba4bedb05e8a76a7a9",
-            "courseCode": "GST-300",
-            "name": "English Language: Lexis and Structure",
-            "level": 300,
-            "semester": 2,
-            "units": 2
-        },
-        {
-            "_id": "658d87ba4bedb05e8a76a7a9",
-            "courseCode": "GST-300",
-            "name": "English Language: Lexis and Structure",
-            "level": 300,
-            "semester": 2,
-            "units": 2
-        },
-        {
-            "_id": "658d87ba4bedb05e8a76a7a9",
-            "courseCode": "GST-300",
-            "name": "English Language: Lexis and Structure",
-            "level": 300,
-            "semester": 2,
-            "units": 2
-        },
-        {
-            "_id": "658d87ba4bedb05e8a76a7a9",
-            "courseCode": "GST-300",
-            "name": "English Language: Lexis and Structure",
-            "level": 300,
-            "semester": 2,
-            "units": 2
-        },
-        {
-            "_id": "658d87ba4bedb05e8a76a7a9",
-            "courseCode": "GST-300",
-            "name": "English Language: Lexis and Structure",
-            "level": 300,
-            "semester": 1,
-            "units": 2
-        },
-        {
-            "_id": "658d87ba4bedb05e8a76a7a9",
-            "courseCode": "GST-300",
-            "name": "English Language: Lexis and Structure",
-            "level": 300,
-            "semester": 1,
-            "units": 2
-        },
-        {
-            "_id": "658d87ba4bedb05e8a76a7a9",
-            "courseCode": "GST-300",
-            "name": "English Language: Lexis and Structure",
-            "level": 300,
-            "semester": 1,
-            "units": 2
-        },
-        {
-            "_id": "658d87ba4bedb05e8a76a7a9",
-            "courseCode": "GST-300",
-            "name": "English Language: Lexis and Structure",
-            "level": 300,
-            "semester": 1,
-            "units": 2
-        }
-    ]
+const { studentDetails } = storeToRefs(useStudentPortalStore());
+const courseData = studentDetails.value.courseData
 </script>
 
 <template>
     <section>
         <div class="p-2 text-white bg-primary text-center rounded-lg mx-2">
-        <p class="font-bold text-xl">Fist Semester</p>
+        <p class="font-bold text-xl">First Semester</p>
         </div>
         <div class="rounded-lg shadow-md bg-white p-4 my-2 mx-2">
             <table class="w-full text-center">
@@ -99,7 +19,7 @@ const courseData = [
                 </thead>
                 <tbody>
                     <tr v-for="details in courseData">
-                        <template v-if="details.semester === 2">
+                        <template v-if="details.semester === 1">
                             <td  class="py-2">{{ details.courseCode }}</td>
                             <td >{{ details.name }}</td>
                             <td >{{ details.units }}</td>
@@ -123,7 +43,7 @@ const courseData = [
                 </thead>
                 <tbody>
                     <tr v-for="details in courseData">
-                        <template v-if="details.semester === 1">
+                        <template v-if="details.semester === 2">
                             <td class="py-2">{{ details.courseCode }}</td>
                             <td>{{ details.name }}</td>
                             <td>{{ details.units }}</td>
