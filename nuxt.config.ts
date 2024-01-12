@@ -17,6 +17,7 @@ export default defineNuxtConfig({
   routeRules: {
     // Homepage 
     '/schedules/**': { ssr: false },
+    // '/schoolportal/schedules/**': { ssr: false },
   },
   runtimeConfig: {
     public: {
