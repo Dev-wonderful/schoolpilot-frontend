@@ -3,20 +3,19 @@
         layout: 'login'
     })
 
-    import type { CustomError } from '~/types'
+    import type { CustomError, StudentResponseData } from '~/types'
+    import { toast } from 'vue3-toastify';
 
-    type ActivatiioResponseData = {
-        email: string,
-        message: string,
-        xToken: string
-    }
     const { email, role } = storeToRefs(useDashboardUpdateStore())
+    const { studentDetails } = storeToRefs(useStudentPortalStore())
 
     const password = ref('');
     const confirmPassword = ref('');
     const token = ref('')
     const isConfirmedPassword = ref(true)
     const passwordPattern = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[@$!%*#?&])[A-Za-z\\d@$!%*#?&]{8,}$"
+    let numberOfTries = 0
+    const MAX_RETRIES = 2
 
     // delay the evaluation of the password
     const validatePassword = useDebounceFn(() => {
@@ -25,13 +24,19 @@
 
     function onSubmit(){
         if (!isConfirmedPassword.value) {
-            alert("Please enter a valid password")
+            toast.warning("Your passwords do not match, please check properly", {
+                autoClose: 3000
+            });
+
+            // clear the password inputs
+            password.value = '';
+            confirmPassword.value = '';
+            
             return
         }
         const userCredentials = `${email.value}:${password.value}`
         // convert to Base64
         const authToken = btoa(userCredentials)
-        console.log('auth:', authToken)
         const BasicAuthHeader = {
             'Authorization': `Basic ${authToken}`
         }
@@ -39,32 +44,57 @@
         const formData = {
             token: token.value,
         };
-        console.log(formData)
-        
-        
+        const toastId = toast.loading('Please wait...', { autoClose: 2000 })
         const requestEndpoint = `/${role.value}portal/activateprofile`;
-        useMakeRequest(requestEndpoint, 'POST', JSON.stringify(formData), true, BasicAuthHeader).then((response) => {
-            // console.log('Data:', response.data.value)
-            // console.log('Error:', (response.error.value as CustomError)?.statusCode)
-            const status = response.status.value
-            // console.log(status)
+        useMakeRequest(requestEndpoint, 'POST', JSON.stringify(formData), true, BasicAuthHeader)
+        .then((response) => {
+            numberOfTries++;
+            const status = response.status.value;
             if (status === 'success') {
-                // console.log('successful')
                 return response.data.value
             } else if (status === 'error') {
                 const statusCode = (response.error.value as CustomError)?.statusCode
-                if (statusCode === 401) {
-                    // console.log('throw error')
-                    throw new Error('Sorry invalid credentials')
-                } else navigateTo('/');
+                if (statusCode === 400) {
+                    throw new Error('Invalid Token');
+                } else throw new Error('Server Error, Try again later');
             }
         })
-        .then((response) => {
-            console.log('validation response:', response)
-            document.cookie = `xToken=${(response as ActivatiioResponseData).xToken}`
-            navigateTo(`/login?role=${role.value}`)
+        .then((responseData) => {
+            const response = responseData as StudentResponseData
+            toast.update(toastId, {
+                render: 'Activation successful, you have been logged into your account',
+                autoClose: true,
+                closeOnClick: true,
+                closeButton: true,
+                type: 'success',
+                isLoading: false,
+            })
+            // console.log('validation response:', response)
+            document.cookie = `xToken=${response.xToken}`
+            document.cookie = `userData=${JSON.stringify(response)}`
+            studentDetails.value = response.Dashboard
+            useDelayNavigationBriefly(`/studentportal/dashboard`)
         })
-        .catch((error: Error) => alert(error.message))
+        .catch((error: Error) => {
+            toast.update(toastId, {
+                render: `${error.message}`,
+                autoClose: true,
+                closeOnClick: true,
+                closeButton: true,
+                type: "error",
+                isLoading: false,
+            })
+            toast.done(toastId)
+            if (numberOfTries >= MAX_RETRIES) {
+                toast.info('Redirecting you...', { autoClose: 1000})
+                useDelayNavigationBriefly('/');
+            }
+
+            // clear the all inputs
+            password.value = '';
+            confirmPassword.value = '';
+            token.value = '';
+        })
     }
 </script>
 <template>
@@ -76,7 +106,7 @@
             </div>
             <NuxtLoadingIndicator />
             <div class="flex flex-col items-center justify-center">
-                <form @submit.prevent="onSubmit" @keypress.enter="onSubmit" class="flex flex-col items-center gap-y-4 justify-center">
+                <form @submit.prevent="onSubmit" class="flex flex-col items-center gap-y-4 justify-center">
 
                     <input type="text" v-model="token" placeholder="Enter Token" minlength="6" maxlength="6"
                            class="border valid:border-green-400 invalid:border-red-400 focus:outline-none border-primary focus:border-[#3c005a] rounded-xl w-72 h-12 px-4" required/>

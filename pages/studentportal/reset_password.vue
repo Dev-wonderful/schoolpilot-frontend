@@ -2,18 +2,26 @@
     definePageMeta({
         layout: 'home'
     })
-    
-    import { toast } from 'vue3-toastify';
+
     import type { CustomError, AccountActivationData } from '~/types'
-    
+    import { toast } from 'vue3-toastify';
+
     const { email, role } = storeToRefs(useDashboardUpdateStore())
-    const route = useRoute();
-    const { role: userRole } = route.query;
+
+    type ResetPassword = {
+        email: string,
+        matricNo?: string
+        staffId?: string
+    }
+
+    const route = useRoute()
+    const { role: userRole } = route.query
     const userEmail = ref('');
-    const firstname = ref('');
-    const isValidEmail = ref(false);
-    let numberOfTries = 0;
-    const MAX_RETRIES = 3;
+    const ID = ref('');
+    const isValidEmail = ref(false)
+    let numberOfTries = 0
+    const MAX_RETRIES = 2
+
     
     function validateEmail() {
         const emailRegex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -21,47 +29,45 @@
     }
     function onSubmit(){
         if (!isValidEmail.value) {
-            toast.warning("Please enter a valid email address", {
-                autoClose: 3000
-            });
-            // clear input
-            userEmail.value = '';
+            toast.warning("Please enter a valid email address", {autoClose: 3000})
 
             return
         }
-        const formData = {
+        const formData: ResetPassword = {
             email: userEmail.value,
-            firstName: firstname.value,
         };
-        console.log(formData)
-        const toastId = toast.loading('Please wait...', { autoClose: 3000 })
-        const requestEndpoint = `/${userRole}portal/signin`;
+
+        if (userRole === 'student') formData.matricNo = ID.value;
+        else formData.staffId = ID.value;
+
+        const toastId = toast.loading('Please wait...', { autoClose: 1500 })
+        const requestEndpoint = `/${userRole}portal/resetpassword`;
         useMakeRequest(requestEndpoint, 'POST', JSON.stringify(formData), true)
         .then((response) => {
-            numberOfTries++;
+            numberOfTries++
             const status = response.status.value;
             if (status === 'success') {
-                return response.data.value;
+                return response.data.value
             } else if (status === 'error') {
-                const statusCode = (response.error.value as CustomError)?.statusCode
+                const statusCode = (response.error.value as CustomError)?.statusCode;
                 if (statusCode === 400) {
-                    throw new Error('Sorry your request was not successful, This may be due to invalid credentials')
+                    throw new Error('Sorry your request was not successful,\nTry again later or reach out to your admin if this persists\nThis may be due to invalid credentials')
                 } else throw new Error('Forbidden');
             }
         })
         .then((response) => {
             toast.update(toastId, {
-                render: 'Check your mail for your activation token\n\nClick to clear this message',
+                render: 'Check your mail for your reset token\n\nClick to clear this message',
                 autoClose: false,
                 closeOnClick: true,
                 closeButton: true,
                 type: 'success',
                 isLoading: false,
             })
-            console.log('activation response:', response);
+            // console.log('reset password:', response)
             email.value = (response as AccountActivationData)?.email;
-            role.value = userRole as string;
-            useDelayNavigationBriefly('/account_activation');
+            role.value = userRole as string
+            useDelayNavigationBriefly('/set_newpassword')
         })
         .catch((error: Error) => {
             toast.update(toastId, {
@@ -74,14 +80,12 @@
             })
             toast.done(toastId)
             if (numberOfTries >= MAX_RETRIES) {
-                toast.info('Please contact the Admin for help with your account activation', {
-                    autoClose: 3000
-                });
+                toast.info('Redirecting you...', { autoClose: 1000})
                 useDelayNavigationBriefly('/');
-            };
-            // clear inputs
+            }
+            // Clear all inputs
             userEmail.value = '';
-            firstname.value = '';
+            ID.value = '';
         })
     }
 </script>
@@ -95,11 +99,11 @@
             </div>
             <div class="flex flex-col items-center justify-center">
                 <form @submit.prevent="onSubmit" class="flex flex-col items-center justify-center">
-                    <input type="text" v-model="firstname" placeholder="FirstName" required 
+                    <input type="text" v-model="ID" :placeholder="userRole === 'student' ? 'Matric Number': 'Staff ID'" required 
                            class="border valid:border-green-400 invalid:brder-red-400 focus:outline-none border-primary focus:border-[#3c005a] rounded-xl w-72 h-12 mb-4 px-4" />
                     <input type="email" id="email" v-model="userEmail" @input="validateEmail" placeholder="Email" required 
                            class="focus:outline-none focus:border-[#3c005a] valid:border-green-400 invalid:brder-red-400 border border-primary rounded-xl w-72 h-12 mb-4 px-4">
-                    <button type="submit" class="bg-primary rounded-xl text-white py-4 font-bold  text-2xl mb-4 w-72 text-center">Activate Account</button>
+                    <button type="submit" class="bg-primary rounded-xl text-white py-4 font-bold  text-2xl mb-4 w-72 text-center">Reset Password</button>
                 </form>
             </div>
         </div>
