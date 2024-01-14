@@ -5,15 +5,12 @@
     const route = useRoute()
     const { month } = route.query
     if (month) {
-        console.log('update')
         presentMonth.value = month as string
-        // location.replace('/schedules')
     }
     const offsetMonth = ref(presentMonth.value)
     const DAYS = days.value;
     const scheduleByDay = computed(() => {
         const month = presentMonth.value.split(' ').join('-')
-        // console.log('data:', month, scheduleDataSortedByDay.value, scheduleDataSortedByDay.value[month])
         if(month in scheduleDataSortedByDay.value) {
             return scheduleDataSortedByDay.value[month]
         }
@@ -57,7 +54,6 @@
             i++
             if (offset) {
                 --offset;
-                
                 const pastDay = prevMonthDays - offset
                 const pastDate = `${pastDay}-${prevMonth}-${prevMonthYear}`
                 yield {day: String(pastDay), date: pastDate}
@@ -116,7 +112,6 @@
         const monthAndYear = dateArr.splice(1, 2).join('-');
         navigateTo(`/studentportal/schedules/${monthAndYear}/${dateArr[0]}`)
     }
-    // console.log('schedule', scheduleByDay.value)
 </script>
 <template>
      <div class="current_month w-[95%] lg:w-[87%] h-8 text-lg bg-primary rounded-md text-white mt-3 mx-auto text-center flex flex-row justify-around items-center px-auto">
@@ -135,7 +130,7 @@
             {{ day.day }}
             <div class="activity bg-rd-50 h-[30px] sm:h-[50px] w-[100%] overflow-x-hidden overflow-y-clip flex flex-col gap-1 justify-start items-center">
                 <div class="activity_dot text-[10px] min-h-[12px] bg[#ff0000] px-1 w-full lg:w-[80%] mx-auto rounded-md leading-[10px] text-center text-white invert bgprimary roundedfull truncate"
-                     :style="{ 'background-color': schedule.scheduleColor ? schedule.scheduleColor : '#925FE2' }"
+                     :style="{ 'background-color': schedule.color ? schedule.color : '#925FE2' }"
                      v-for="schedule of scheduleByDay[day.day]?.slice(0, 3)" :title="schedule.title">
                      {{ schedule.title }}
                 </div>

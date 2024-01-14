@@ -1,7 +1,8 @@
 <script lang="ts" setup>
     import type { ScheduleObjType, ResponseType, NewScheduleType } from '~/types';
+    import { toast } from 'vue3-toastify';
 
-    const { reloadData } = storeToRefs(useScheduleStore())
+    const { reloadData, scheduleDataSortedByDay } = storeToRefs(useScheduleStore())
 
     const defaultColor = ref("#925FE2");
     const currentDay = () => {
@@ -18,7 +19,6 @@
         const date = (document.getElementById('date') as HTMLInputElement).value;
         const today = new Date().valueOf()
         const selectedDay = new Date(date).valueOf()
-        // console.log('it waS TRIGGERED', date, selectedDay - today);
         const targetElement = event.target as HTMLInputElement
         if ((selectedDay - today) > 0) {
             event.preventDefault();
@@ -30,7 +30,6 @@
         event.preventDefault();
         const form = (document.getElementById('new-schedule') as HTMLFormElement)
         const inputs = document.querySelectorAll('input')
-        // console.log('inputs',inputs)
         // if validation fails cancel processing
         if (!form.reportValidity()) {
             const invalidity = [];
@@ -49,28 +48,26 @@
         const time = (document.getElementById('time') as HTMLInputElement).value;
         const scheduleColor = (document.getElementById('color') as HTMLInputElement).value;
         const description = (document.getElementById('description') as HTMLTextAreaElement).value;
-        console.log('data:', title, date, time, scheduleColor, description);
         const monthAndYear = useDateFormat(date, 'MMMM-YYYY').value;
-        console.log('month and year:', monthAndYear);
         const scheduledTime = `${date}T${time}:00.000`;
-        console.log('scheduled time:', scheduledTime)
         const body: NewScheduleType = {
+            _id: uniqueId(),
             title: title,
-            scheduledTime: scheduledTime,
-            scheduleColor: scheduleColor,
+            time: scheduledTime,
+            color: scheduleColor,
             scheduleMonth: monthAndYear,
+            createdAt: new Date().toISOString()
         }
         if (description !== '') body.description = description.trim()
-        console.log('json:', JSON.stringify(body))
         const promise = new Promise((resolve, _) => {
             resolve(useMakeRequest('/api/v1/schedule', 'POST', JSON.stringify(body)))
         })
         promise.then((response) => {
             if ((response as ResponseType<unknown>).error.value) {
-                alert('There was an error creating your schedule, Please try again')
-                // navigateTo('/schedules/new_schedule')
+                toast.error('There was an error creating your schedule, Please try again', {autoClose: 2000})
                 location.reload()
             } else {
+                toast.success('schedule created', {autoClose: 1000})
                 reloadData.value = true
                 navigateTo(`/studentportal/schedules?month=${monthAndYear.split('-').join(' ')}`);
             }

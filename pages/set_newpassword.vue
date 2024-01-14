@@ -78,8 +78,8 @@
             })
             console.log('validation response:', response)
             document.cookie = `xToken=${(response as StudentResponseData)?.xToken}`
-            studentDetails.value = response as StudentResponseData
-            useDelayNavigationBriefly(`/dashboard`)
+            studentDetails.value = (response as StudentResponseData).Dashboard
+            useDelayNavigationBriefly(`/studentportal/dashboard`)
         })
         .catch((error: Error) => {
             toast.update(toastId, {
