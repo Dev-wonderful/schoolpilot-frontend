@@ -24,10 +24,13 @@ export const useMakeRequest = (request: string, method: requestMethod = 'GET', b
     // console.log("called")
     const runtimeConfig = useRuntimeConfig();
     const baseUrl = staging ? runtimeConfig.public.PROD_BASE_URL : '';
+    const token = useCookie('xToken').value
+
     let headers = new Headers({
         ...header,
         'Content-Type': 'application/json',
-        'Accept': '*/*'
+        'Accept': '*/*',
+        'X-Token': token as string,
     });
     // 
     request = toValue(request)
