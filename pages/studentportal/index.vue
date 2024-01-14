@@ -6,7 +6,6 @@
     import { toast } from 'vue3-toastify';
     import type { CustomError, StudentResponseData } from '~/types'
 
-    const route = useRoute();
     const role = 'student';
     const { studentDetails } = storeToRefs(useStudentPortalStore())
     console.log('role:', role)
@@ -21,7 +20,6 @@
         const userCredentials = `${matricNo.value}:${password.value}`
         // convert to Base64
         const authToken = btoa(userCredentials)
-        console.log('auth:', authToken)
         const BasicAuthHeader = {
             'Authorization': `Basic ${authToken}`
         }
@@ -29,7 +27,6 @@
             matricNo: matricNo.value,
             password: password.value,
         };
-        console.log(formData)
         
         const toastId = toast.loading('Please wait...', { autoClose: 2000 })
         const requestEndpoint = `/studentportal/login`;
@@ -58,11 +55,11 @@
                 type: 'success',
                 isLoading: false,
             })
-            console.log('loggedin response:', response)
+            // console.log('loggedin response:', response)
             document.cookie = `xToken=${response?.xToken}`
             document.cookie = `userData=${JSON.stringify(response)}`
-            studentDetails.value = response
-            useDelayNavigationBriefly('studentportal/dashboard');
+            studentDetails.value = response.Dashboard
+            useDelayNavigationBriefly('/studentportal/dashboard');
         })
         .catch((error: Error) => {
             toast.update(toastId, {
@@ -99,7 +96,7 @@
                            class="border valid:border-green-400 invalid:border-red-400 focus:outline-none border-primary focus:border-[#3c005a] rounded-xl w-72 h-12 px-4" />
                     <div class="clickables flex flex-col gap-1">
                         <button type="submit" class="bg-primary rounded-xl text-white py-4 font-bold  text-2xl mb-4 w-72 text-center">Login</button>
-                        <NuxtLink :to="`reset_password?role=${role as string}`" class="text-red-400 h10 text-xs hover:text-red-300">forgot password?</NuxtLink>
+                        <NuxtLink :to="`/reset_password?role=${role as string}`" class="text-red-400 h10 text-xs hover:text-red-300">forgot password?</NuxtLink>
                     </div>
                 </form>
             </div>

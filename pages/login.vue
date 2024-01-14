@@ -61,8 +61,8 @@
             console.log('loggedin response:', response)
             document.cookie = `xToken=${response?.xToken}`
             document.cookie = `userData=${JSON.stringify(response)}`
-            studentDetails.value = response
-            useDelayNavigationBriefly('/dashboard');
+            studentDetails.value = response.Dashboard
+            useDelayNavigationBriefly('/studentportal/dashboard');
         })
         .catch((error: Error) => {
             toast.update(toastId, {

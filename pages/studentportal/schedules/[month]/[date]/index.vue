@@ -1,23 +1,19 @@
 <script lang="ts" setup>
 import type { ScheduleObjType } from '~/types';
 
-    // definePageMeta({
-    //     layout: 'month'
-    // })
     const route = useRoute()
     const monthParams = route.params.month as string
     const dayParams = route.params.date as string
     const dateParams = `${dayParams}-${monthParams}`
-    const { scheduleData, scheduleDataSortedByDay, presentMonth } = storeToRefs(useScheduleStore())
+    const { scheduleDataSortedByDay, presentMonth } = storeToRefs(useScheduleStore())
 
     // get the schedule for a particular day in the month as read-only data
-    if (monthParams in scheduleData.value === false) presentMonth.value = monthParams.split('-').join(' ');
+    if (monthParams in scheduleDataSortedByDay.value === false) presentMonth.value = monthParams.split('-').join(' ');
     const SCHEDULE = computed(() => {
-        const processedDateSchedule = []
-        if (monthParams in scheduleData.value) {
-            for (let monthData of scheduleData.value[monthParams]) {
-                const day = useDateFormat(monthData.scheduledTime, 'D');
-                if (+day.value === +dayParams) processedDateSchedule.push(monthData)
+        const processedDateSchedule: Array<ScheduleObjType> = []
+        if (monthParams in scheduleDataSortedByDay.value) {
+            if(dayParams in scheduleDataSortedByDay.value[monthParams]) {
+                return scheduleDataSortedByDay.value[monthParams][dayParams]
             }
         }
         return processedDateSchedule
@@ -53,8 +49,6 @@ import type { ScheduleObjType } from '~/types';
         // else if(mobileWidth) return 1
         else return 1
     });
-
-
 
     const previousDay = (offset: number = 1) => {
         const date = new Date(dateParams)
@@ -104,7 +98,7 @@ import type { ScheduleObjType } from '~/types';
     // Process the query to be added to the navigation request.
     // This is because description might not always exist
     const getQueryArgs = (schedule: ScheduleObjType) => {
-        let query = `?time=${schedule.scheduledTime}`;
+        let query = `?time=${schedule.time}`;
         if (schedule.description) query += `&description=${schedule.description}`
         return query;
     }
@@ -139,7 +133,7 @@ import type { ScheduleObjType } from '~/types';
             <div class="schedule_content grid h-14 bg-[whitesmoke] grid-cols-6 px-4 rounded-md shadow-md cursor-pointer"
                  @click="navigateTo(`${dayParams}/${schedule.title}${getQueryArgs(schedule)}`)" v-for="schedule of SCHEDULE"
                  :title="schedule?.description">
-                <div class="time grid col-span-2 sm:col-span-1 w-full h-full">{{ formatTime(schedule.scheduledTime) }}</div>
+                <div class="time grid col-span-2 sm:col-span-1 w-full h-full">{{ formatTime(schedule.time) }}</div>
                 <div class="description col-span-4 sm:col-span-5 truncate w-full h-full bg-slte-300">{{ schedule.title }}</div>
             </div>
             <AddScheduleButton />
