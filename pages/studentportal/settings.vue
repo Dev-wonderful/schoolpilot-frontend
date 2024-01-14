@@ -70,18 +70,6 @@
   student.DOB = useDateFormat(student.DOB, 'Do of MMMM, YYYY').value
   student.type = student.type === 'UG' ? 'Undergraduate' : 'PostGraduate';
   const divperson ="p-4 mx-auto shadow-lg rounded-sm w-full mb-3"
-  
-  // const fetchStudentData = async () => {
-  //   try {
-  //     const response = await fetch('/api/student'); 
-  //     const data = await response.json();
-  //     student.value = data;
-  //   } catch (error) {
-  //     console.error('Error fetching student data:', error);
-  //   }
-  // };
-  
-  // fetchStudentData();
   </script>
   
   

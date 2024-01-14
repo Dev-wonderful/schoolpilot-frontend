@@ -27,8 +27,8 @@
         <span class="fas fa-search absolute right-0 pl-2s text-gray-400 text-xl ml-2"></span>
       </div>
 
-      <NuxtLink to="/settings" class="flex items-center justify-between w-fit gap-3 h-[3rem] ml-auto mr-14">
-        <img  :src="imageSrc" alt="User Avatar" class="rounded-full ml-6">
+      <NuxtLink to="/studentportal/settings" class="flex items-center justify-between w-fit gap-3 h-[3rem] ml-auto mr-14">
+        <img  :src="imageSrc" alt="User Avatar" class="rounded-full w-18 h-12 bg-center bg-contain ml-6">
         <span class="hidden md:block text-sm font-bold">{{ studentDetails?.firstName }} {{ studentDetails?.lastName }}</span>
       </NuxtLink>
 

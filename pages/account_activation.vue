@@ -69,7 +69,7 @@
                 type: 'success',
                 isLoading: false,
             })
-            console.log('validation response:', response)
+            // console.log('validation response:', response)
             document.cookie = `xToken=${response.xToken}`
             document.cookie = `userData=${JSON.stringify(response)}`
             studentDetails.value = response.Dashboard

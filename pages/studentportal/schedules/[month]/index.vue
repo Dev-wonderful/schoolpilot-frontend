@@ -17,11 +17,9 @@
         middleware: (to, from) => {
             const monthParams = to.params.month as string
             
-            console.log('hello month:', monthParams);
             const { presentMonth } = storeToRefs(useScheduleStore());
             if(process.server) return
             if (process.client) {
-                console.log("middle in client")
                 presentMonth.value = monthParams.split('-').join(' ')
                 document.cookie=`presentMonth=${monthParams}; Max-Age=30`;
                 return navigateTo(`/studentportal/schedules`)

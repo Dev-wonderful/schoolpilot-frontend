@@ -1,7 +1,7 @@
 // common types would be in this file
-export interface UpdateType {
-    title: string,
-    data: {title: string, scheduledTime: string}[]
+export interface DashboardUpdate {
+    'Pending Assignments': Array<Project>,
+    'Upcoming Schedules': Array<ScheduleObjType>
 }
 export type daysNum = {
     [month: string]: number
@@ -112,14 +112,15 @@ export interface StudentData extends UserData {
     level: Level,
     major: string,
     entryMode: EntryMode,
-    standing: Standing
+    standing: Standing,
+    picture: string
 }
 interface DepartmentData extends BasicID {
 }
 interface FacultyData extends BasicID {
 }
 
-interface SortedProjectByDay {
+export interface SortedProjectByDay {
     [month: string]: {
         [day: string]: Array<Project>
     }
@@ -128,7 +129,7 @@ interface SortedProjectByDay {
 export interface Dashboard extends StudentData {
     readonly department: DepartmentData,
     readonly faculty: FacultyData,
-    readonly schedules: ScheduleObjType
+    readonly schedules: SortedResponseByDayType
     readonly projects: SortedProjectByDay
 }
 
