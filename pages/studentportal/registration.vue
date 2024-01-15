@@ -1,4 +1,33 @@
-<script setup>
+<script lang="ts" setup>
+    // import { toast } from 'vue3-toastify';
+    import type { CustomError } from '~/types'
+
+    const requestCourses = `/studentportal/availablecourses/`
+    // get request using the useMakeRequest composable to send a get request to endpoint
+    // useMakeRequest(requestCourses, 'GET',JSON.stringify({semester: 1}), true)
+    // .then((response) => {
+    //     const status = response.status.value
+    //     console.log(response.error.value)
+    //     if (status === 'success') {
+    //         return response.data.value
+    //     } else if (status === 'error') {
+    //         const statusCode = (response.error.value as CustomError)?.statusCode
+    //         if (statusCode === 401) {
+    //             throw new Error('Sorry invalid credentials')
+    //         } else {
+    //             throw new Error('Forbidden')
+    //         }
+    //     }
+    // })
+    // .then((responseData) => {
+    //     const response = responseData
+    //     console.log('loggedin response:', response)
+    // })
+    // .catch((error: Error) => {
+    //     console.log(`${error.message}`);
+    // })
+
+    
     const { studentDetails } = storeToRefs(useStudentPortalStore());
     const courseData = [
         {
@@ -51,8 +80,10 @@
             "units": 2
         }
     ]
-    const firstSemester = []
-    const secondSemester = []
+
+
+    const firstSemester: any[] = []
+    const secondSemester: any[] = []
 
     courseData.forEach(course => {
         if (course.semester === 1) {
@@ -63,13 +94,49 @@
     })
 
     // console.log(firstSemester);
-    const checkedCourses = ref([]);
+    const firstSemesterCourses = ref([]);
+    const secondSemesterCourses = ref([]);
+    // const toastId = toast.loading('Please wait...', { autoClose: 2000 })
 
-    const onSubmitCourses = () => {
-        console.log(`semester courses:`,checkedCourses.value);
-        checkedCourses.value = [];
+    const onSubmitfirstCourses = () => {
+        // console.log({courseId : [...firstSemesterCourses.value], semester: 1});
+        const requestEndpoint = `/studentportal/registercourses`;
+        const formData = {
+            courseId : [...firstSemesterCourses.value],
+            semester: 1
+        }
+    //     useMakeRequest(requestEndpoint, 'POST', JSON.stringify(formData), true)
+    //     .then((response) => {
+    //         const status = response.status.value
+    //         if (status === 'success') {
+    //             return response.data.value
+    //         } else if (status === 'error') {
+    //             const statusCode = (response.error.value as CustomError)?.statusCode
+    //             if (statusCode === 401) {
+    //                 throw new Error('Sorry invalid credentials')
+    //             } else {
+    //                 throw new Error('Forbidden')
+    //             }
+    //         }
+    //     })
+    //     .then((responseData) => {
+    //         const response = responseData
+    //         toast.update(toastId, {
+    //             render: 'Login Successful',
+    //             autoClose: true,
+    //             closeOnClick: true,
+    //             closeButton: true,
+    //             type: 'success',
+    //             isLoading: false,
+    //         })
+    //         console.log('loggedin response:', response)
+    //     })
+    //     firstSemesterCourses.value = [];
+         console.log(formData)}
+    const onSubmitsecondCourses = () => {
+        console.log({courseId : [...secondSemesterCourses.value],semester: 2});
+        secondSemesterCourses.value = [];
     }
-
 </script>
 
 
@@ -90,7 +157,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="details in firstSemester">
-                        <td class="py-4"><input type="checkbox" v-model="checkedCourses" :value="details"></td>
+                        <td class="py-4"><input type="checkbox" v-model="firstSemesterCourses" :value="details._id"></td>
                             <td  class="py-2">{{ details.courseCode }}</td>
                             <td >{{ details.name }}</td>
                             <td >{{ details.units }}</td>
@@ -99,6 +166,11 @@
                 </tbody>
             </table>
         </div>
+
+        <button @click.prevent="onSubmitfirstCourses" class="bg-primary
+        hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-3 mt-3">
+        Submit
+        </button>
 
         <!-- second semester -->
         <div class="p-2 text-white bg-primary text-center rounded-lg my-4 mx-2">
@@ -116,7 +188,7 @@
                 </thead>
                 <tbody>
                     <tr v-for="details in secondSemester">
-                        <td class="py-4"><input type="checkbox" v-model="checkedCourses" :value="details"></td>
+                        <td class="py-4"><input type="checkbox" v-model="secondSemesterCourses" :value="details._id"></td>
                             <td  class="py-2">{{ details.courseCode }}</td>
                             <td >{{ details.name }}</td>
                             <td >{{ details.units }}</td>
@@ -125,7 +197,7 @@
                 </tbody>
             </table>
         </div>
-        <button @click="onSubmitCourses" class="bg-primary
+        <button @click.prevent="onSubmitsecondCourses" class="bg-primary
         hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-3 mt-3">
         Submit
         </button>
