@@ -1,3 +1,46 @@
+<script setup>
+  // const { name, avatar } = storeToRefs(useDashboardUpdateStore());
+  const { studentDetails, avatar } = storeToRefs(useStudentPortalStore());
+  const imageSrc = avatar.value ? avatar.value : '/images/Frame.png';
+  // const student = ref({firstName: 'Nathan',matricNo: '1246465', NextOfKin: 'Wonderful', NextOfKincontact:'0807353788', lastName:'John', middleName: 'Ebuka', department:'computer sci',gender: 'male', DOB: '01/22/2022', nationality: 'Nigeria', stateOfOrigin:'Lagos', LGA: 'Lekki', phone: '09033338339', email: 'onwuka@gmail.com', bio:"Travel, Music, Photography"});
+  const student = {...studentDetails.value}
+  student.DOB = useDateFormat(student.DOB, 'Do of MMMM, YYYY').value
+  student.type = student.type === 'UG' ? 'Undergraduate' : 'PostGraduate';
+  const divperson ="p-4 mx-auto shadow-lg rounded-sm w-full mb-3"
+
+
+  const requestLogout = `/studentportal/logout`;
+  const requestUpdate = `/studentportal/updateprofile`;
+
+  // make a function to send a get request to logout endpoint
+  const logout = () => {
+    useMakeRequest(requestLogout, 'GET', undefined, true)
+    .then((response) => {
+      const status = response.status.value
+      console.log(response.error.value)
+      if (status === 'success') {
+        return response.data.value
+      } else if (status === 'error') {
+        const statusCode = (response.error.value)?.statusCode
+        if (statusCode === 401) {
+          throw new Error('Sorry invalid credentials')
+        } else {
+          throw new Error('Forbidden')
+        }
+      }
+    })
+    .then((responseData) => {
+      console.log(' response:', responseData)
+      
+      useDelayNavigationBriefly('/');
+    })
+    .catch((error) => {
+      console.log(`${error.message}`);
+    })
+  }
+
+  </script>
+
 <template>
     <div class=" mx-auto px-4">
       <h1 class="text-3xl font-bold mb-4">My Profile</h1>
@@ -57,19 +100,7 @@
       <div v-else>
         <p class="text-center">Loading profile...</p>
       </div>
+      <button @click.prevent="logout" class="p-3 mb-4 text-white font-medium bg-red-500 hover:bg-red-700 rounded-lg justify-self-end">Log Out</button>
     </div>
+    
   </template>
-  
-  
-  <script setup>
-  // const { name, avatar } = storeToRefs(useDashboardUpdateStore());
-  const { studentDetails, avatar } = storeToRefs(useStudentPortalStore());
-  const imageSrc = avatar.value ? avatar.value : '/images/Frame.png';
-  // const student = ref({firstName: 'Nathan',matricNo: '1246465', NextOfKin: 'Wonderful', NextOfKincontact:'0807353788', lastName:'John', middleName: 'Ebuka', department:'computer sci',gender: 'male', DOB: '01/22/2022', nationality: 'Nigeria', stateOfOrigin:'Lagos', LGA: 'Lekki', phone: '09033338339', email: 'onwuka@gmail.com', bio:"Travel, Music, Photography"});
-  const student = {...studentDetails.value}
-  student.DOB = useDateFormat(student.DOB, 'Do of MMMM, YYYY').value
-  student.type = student.type === 'UG' ? 'Undergraduate' : 'PostGraduate';
-  const divperson ="p-4 mx-auto shadow-lg rounded-sm w-full mb-3"
-  </script>
-  
-  
