@@ -1,12 +1,14 @@
 <template>
-  <div class="grid-container overflow-hidden">
-    <!-- Navbar -->
-    <div class="header"><Navbar /></div>
-    <!-- Aside -->
-    <Asidebar class="sidebar"></Asidebar>
-    <!-- Main -->
-    <main class="main"><slot /></main>
-    </div>
+  <ClientOnly>
+    <div class="grid-container overflow-hidden">
+      <!-- Navbar -->
+      <div class="header"><Navbar /></div>
+      <!-- Aside -->
+      <Asidebar class="sidebar"></Asidebar>
+      <!-- Main -->
+      <main class="main"><slot /></main>
+      </div>
+  </ClientOnly>
 </template>
 
 <style scoped>

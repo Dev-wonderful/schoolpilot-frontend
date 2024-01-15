@@ -66,7 +66,6 @@
     const checkedCourses = ref([]);
 
     const onSubmitCourses = () => {
-        console.log(`semester courses:`,checkedCourses.value);
         checkedCourses.value = [];
     }
 

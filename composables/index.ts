@@ -21,7 +21,6 @@ export const useErrorHandler = (error: globalThis.Ref<Error | null>) => {
  * @returns A Promise object of the request
  */
 export const useMakeRequest = (request: string, method: requestMethod = 'GET', body: string | undefined = undefined, staging = false, header: Header = {}) => {
-    // console.log("called")
     const runtimeConfig = useRuntimeConfig();
     const baseUrl = staging ? runtimeConfig.public.PROD_BASE_URL : '';
     const token = useCookie('xToken').value

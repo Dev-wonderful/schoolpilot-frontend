@@ -37,7 +37,6 @@
         const userCredentials = `${email.value}:${password.value}`
         // convert to Base64
         const authToken = btoa(userCredentials)
-        console.log('auth:', authToken)
         const BasicAuthHeader = {
             'Authorization': `Basic ${authToken}`
         }
@@ -45,7 +44,6 @@
         const formData = {
             token: token.value,
         };
-        console.log(formData)
         
         const toastId = toast.loading('Please wait...', { autoClose: 2000 })
         const requestEndpoint = `/${role.value}portal/newpassword`;
@@ -76,9 +74,9 @@
                 type: 'success',
                 isLoading: false,
             })
-            console.log('validation response:', response)
-            document.cookie = `xToken=${(response as StudentResponseData)?.xToken}`
+            updateThisCookie('xToken', (response as StudentResponseData)?.xToken)
             studentDetails.value = (response as StudentResponseData).Dashboard
+            localStorage.setItem('userData', JSON.stringify((response as StudentResponseData).Dashboard))
             useDelayNavigationBriefly(`/studentportal/dashboard`)
         })
         .catch((error: Error) => {

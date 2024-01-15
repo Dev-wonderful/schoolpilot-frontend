@@ -9,7 +9,6 @@
     const route = useRoute();
     const { role } = route.query;
     const { studentDetails } = storeToRefs(useStudentPortalStore())
-    console.log('role:', role)
     const roleState = ref(role as string)
     const matricNo = ref('');
     const password = ref('');
@@ -21,7 +20,6 @@
         const userCredentials = `${matricNo.value}:${password.value}`
         // convert to Base64
         const authToken = btoa(userCredentials)
-        console.log('auth:', authToken)
         const BasicAuthHeader = {
             'Authorization': `Basic ${authToken}`
         }
@@ -29,7 +27,6 @@
             matricNo: matricNo.value,
             password: password.value,
         };
-        console.log(formData)
         
         const toastId = toast.loading('Please wait...', { autoClose: 2000 })
         const requestEndpoint = `/${role as string}portal/login`;
@@ -58,9 +55,8 @@
                 type: 'success',
                 isLoading: false,
             })
-            console.log('loggedin response:', response)
-            document.cookie = `xToken=${response?.xToken}`
-            document.cookie = `userData=${JSON.stringify(response)}`
+            updateThisCookie('xToken', response.xToken)
+            localStorage.setItem('userData', JSON.stringify(response.Dashboard))
             studentDetails.value = response.Dashboard
             useDelayNavigationBriefly('/studentportal/dashboard');
         })

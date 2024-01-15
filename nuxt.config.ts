@@ -14,11 +14,12 @@ export default defineNuxtConfig({
       autoprefixer: {},
     },
   },
-  routeRules: {
-    // Homepage 
-    '/schedules/**': { ssr: false },
-    // '/schoolportal/schedules/**': { ssr: false },
-  },
+  ssr: false,
+  // routeRules: {
+  //   // Homepage 
+  //   '/schedules/**': { ssr: false },
+  //   // '/schoolportal/schedules/**': { ssr: false },
+  // },
   runtimeConfig: {
     public: {
       PROD_BASE_URL: process.env.PROD_BASE_URL,

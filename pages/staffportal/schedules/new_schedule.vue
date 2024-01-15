@@ -1,7 +1,8 @@
 <script lang="ts" setup>
     import type { ScheduleObjType, ResponseType, NewScheduleType } from '~/types';
+    import { toast } from 'vue3-toastify';
 
-    const { reloadData } = storeToRefs(useScheduleStore())
+    const { reloadData, scheduleDataSortedByDay } = storeToRefs(useScheduleStore())
 
     const defaultColor = ref("#925FE2");
     const currentDay = () => {
@@ -37,6 +38,7 @@
                     if(!Boolean(input.dataset.valid)) invalidity.push(true)
                 }
             }
+            console.log(invalidity)
             if (invalidity.includes(true)) return
         }
 
@@ -49,10 +51,12 @@
         const monthAndYear = useDateFormat(date, 'MMMM-YYYY').value;
         const scheduledTime = `${date}T${time}:00.000`;
         const body: NewScheduleType = {
+            _id: uniqueId(),
             title: title,
-            scheduledTime: scheduledTime,
-            scheduleColor: scheduleColor,
+            time: scheduledTime,
+            color: scheduleColor,
             scheduleMonth: monthAndYear,
+            createdAt: new Date().toISOString()
         }
         if (description !== '') body.description = description.trim()
         const promise = new Promise((resolve, _) => {
@@ -60,12 +64,12 @@
         })
         promise.then((response) => {
             if ((response as ResponseType<unknown>).error.value) {
-                alert('There was an error creating your schedule, Please try again')
-                // navigateTo('/schedules/new_schedule')
+                toast.error('There was an error creating your schedule, Please try again', {autoClose: 2000})
                 location.reload()
             } else {
+                toast.success('schedule created', {autoClose: 1000})
                 reloadData.value = true
-                navigateTo(`/schedules?updatedMonth=${monthAndYear.split('-').join(' ')}`);
+                navigateTo(`/studentportal/schedules?month=${monthAndYear.split('-').join(' ')}`);
             }
         })
     }
