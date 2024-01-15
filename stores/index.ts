@@ -1,4 +1,4 @@
-import { type UpdateType, type StudentData } from "~/types";
+// import { type UpdateType, type StudentData } from "~/types";
 
 export const useDashboardUpdateStore = defineStore('dashboardUpdate', () => {
     // The first 3 state would be gotten from login endpoint

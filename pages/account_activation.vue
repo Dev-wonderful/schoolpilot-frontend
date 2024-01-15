@@ -69,9 +69,8 @@
                 type: 'success',
                 isLoading: false,
             })
-            // console.log('validation response:', response)
-            document.cookie = `xToken=${response.xToken}`
-            document.cookie = `userData=${JSON.stringify(response)}`
+            updateThisCookie('xToken', response.xToken)
+            localStorage.setItem('userData', JSON.stringify(response))
             studentDetails.value = response.Dashboard
             useDelayNavigationBriefly(`/studentportal/dashboard`)
         })

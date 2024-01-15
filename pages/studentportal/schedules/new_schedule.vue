@@ -38,7 +38,6 @@
                     if(!Boolean(input.dataset.valid)) invalidity.push(true)
                 }
             }
-            console.log(invalidity)
             if (invalidity.includes(true)) return
         }
 
@@ -51,21 +50,18 @@
         const monthAndYear = useDateFormat(date, 'MMMM-YYYY').value;
         const scheduledTime = `${date}T${time}:00.000`;
         const body: NewScheduleType = {
-            _id: uniqueId(),
             title: title,
             time: scheduledTime,
             color: scheduleColor,
-            scheduleMonth: monthAndYear,
-            createdAt: new Date().toISOString()
         }
         if (description !== '') body.description = description.trim()
         const promise = new Promise((resolve, _) => {
-            resolve(useMakeRequest('/api/v1/schedule', 'POST', JSON.stringify(body)))
+            resolve(useMakeRequest('/studentportal/createschedule', 'POST', JSON.stringify(body), true))
         })
         promise.then((response) => {
             if ((response as ResponseType<unknown>).error.value) {
                 toast.error('There was an error creating your schedule, Please try again', {autoClose: 2000})
-                location.reload()
+                // location.reload()
             } else {
                 toast.success('schedule created', {autoClose: 1000})
                 reloadData.value = true

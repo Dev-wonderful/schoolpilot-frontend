@@ -33,7 +33,6 @@
             email: userEmail.value,
             firstName: firstname.value,
         };
-        console.log(formData)
         const toastId = toast.loading('Please wait...', { autoClose: 3000 })
         const requestEndpoint = `/${userRole}portal/signin`;
         useMakeRequest(requestEndpoint, 'POST', JSON.stringify(formData), true)
@@ -58,7 +57,6 @@
                 type: 'success',
                 isLoading: false,
             })
-            console.log('activation response:', response);
             email.value = (response as AccountActivationData)?.email;
             role.value = userRole as string;
             useDelayNavigationBriefly('/account_activation');

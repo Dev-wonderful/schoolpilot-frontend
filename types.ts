@@ -28,8 +28,7 @@ export interface SortedDayType {
 export interface SortedResponseByDayType {
     [month: string]: SortedDayType
 }
-export interface NewScheduleType extends ScheduleObjType{
-    scheduleMonth: string
+export interface NewScheduleType extends Omit<ScheduleObjType, '_id' | 'createdAt'>{
 }
 export interface CustomError extends Error {
     statusCode: number
@@ -69,6 +68,7 @@ interface UserData {
     type: DegreeLevel,
     entryYear: number,
     createdAt: string,
+    picture: string,
 }
 export interface CreatedBy {
     _id: string,
@@ -113,7 +113,9 @@ export interface StudentData extends UserData {
     major: string,
     entryMode: EntryMode,
     standing: Standing,
-    picture: string
+}
+export interface StaffData extends UserData {
+    staffId: string,
 }
 interface DepartmentData extends BasicID {
 }
@@ -126,7 +128,14 @@ export interface SortedProjectByDay {
     }
 }
 
-export interface Dashboard extends StudentData {
+export interface StudentDashboard extends StudentData {
+    readonly department: DepartmentData,
+    readonly faculty: FacultyData,
+    readonly schedules: SortedResponseByDayType
+    readonly projects: SortedProjectByDay
+}
+
+export interface StaffDashboard extends StaffData {
     readonly department: DepartmentData,
     readonly faculty: FacultyData,
     readonly schedules: SortedResponseByDayType
@@ -134,5 +143,9 @@ export interface Dashboard extends StudentData {
 }
 
 export interface StudentResponseData extends Readonly<LoginData> {
-    readonly Dashboard: Dashboard
+    readonly DashBoard: StudentDashboard
+    readonly Dashboard?: StudentDashboard
+}
+export interface StaffResponseData extends Readonly<LoginData> {
+    readonly Dashboard: StaffDashboard
 }

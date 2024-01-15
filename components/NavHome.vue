@@ -1,7 +1,5 @@
 <script lang="ts" setup>
-    const setPortal = (role: string) => {
-        document.cookie = `portal=${role}portal`
-    }
+    
     const dropdownsignup = ref(false);
     const toggledropdownsignup = () => { 
         dropdownlogin.value = false

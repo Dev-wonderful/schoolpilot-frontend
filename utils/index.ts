@@ -36,3 +36,15 @@ export function uniqueId() {
   
     return (idstr);
 }
+export function createThisCookie(name: string, value: string, opts: unknown = {}) {
+    document.cookie=`${name}=${value}; path=/`
+}
+
+export function deleteThisCookie(name: string) {
+    document.cookie=`${name}=''; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/`
+}
+
+export function updateThisCookie(name: string, value: string) {
+    deleteThisCookie(name);
+    createThisCookie(name, value)
+}

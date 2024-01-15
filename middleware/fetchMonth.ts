@@ -1,19 +1,21 @@
-import type { ScheduleObjType, ResponseType, SortedResponseByDayType } from '~/types';
+import type { ScheduleObjType, ResponseType, SortedResponseByDayType, SortedDayType } from '~/types';
+// import type { deleteThisCookie } from '~/utils';
 export default defineNuxtRouteMiddleware( (to) => {
     // skip middleware on server
     if (process.server) return
 
     // Import stores
     const { studentDetails } = storeToRefs(useStudentPortalStore());
-    const { scheduleData, scheduleDataSortedByDay, presentMonth, reloadData } = storeToRefs(useScheduleStore())
+    const { scheduleDataSortedByDay, presentMonth, reloadData } = storeToRefs(useScheduleStore())
 
     // =============================================================
-    // Update schedule store with data from endpoint, but set reload
-    // to true to enable it fetch schedules saved on disk too
+    // Update schedule store with data from endpoint, 
+    // clone with spread operator to prevent update by reference from the copy
     // =============================================================
-    // clone with spread operator to prevent update by reference from the copy (i've removed the spread, I want it to update by reference for now)
-    scheduleDataSortedByDay.value = {...studentDetails.value?.schedules as SortedResponseByDayType}
-    reloadData.value = true
+    if (!Object.keys(scheduleDataSortedByDay.value).length) {
+        scheduleDataSortedByDay.value = {...studentDetails.value?.schedules as SortedResponseByDayType}
+    }
+    // reloadData.value = true
 
     // =============================================================
     // Below is the logic to fetch schedule by month, which should
@@ -23,7 +25,7 @@ export default defineNuxtRouteMiddleware( (to) => {
     const monthParams = computed(() => presentMonth.value.split(' ').join('-'))
     
     /**
-     * 
+     * @deprecated No longer needed since backend now sorts it for us
      * @param month 
      * @param dateData 
      * @returns The modified data
@@ -55,28 +57,28 @@ export default defineNuxtRouteMiddleware( (to) => {
         // Only fetch if the state doesn't have schedule for that month or
         // the state has become stale (maxAged)
         if (month in scheduleDataSortedByDay.value === false || reloadData.value) {
-            const requestEndpoint = `/api/v1/schedule?month=${month}`
-            const { data, error } = await useMakeRequest(requestEndpoint) as ResponseType<ScheduleObjType[]>
-            const responseData = data.value
-            const sortedResponseData = sortScheduleByDay(month, responseData);
+            const requestEndpoint = `/studentportal/getParsedSchedules`
+            const { data, error } = await useMakeRequest(requestEndpoint, 'GET', undefined, true) as ResponseType<any>
+            // const responseData = data.value
+            const sortedResponseData = data.value;
             if (error.value) return false;
             else {
-                if (responseData?.length > 0) {
-                    scheduleData.value[month] = responseData;
-                    scheduleDataSortedByDay.value[month] = sortedResponseData[month]
-                }
-            }
-            document.cookie = `scheduleData=${JSON.stringify(scheduleData.value)}; Max-Age=30`
-            document.cookie = `scheduleDataSortedByDay=${JSON.stringify(scheduleDataSortedByDay.value)}; Max-Age=30`
+                // completely overwrites previous data for all available months
+                scheduleDataSortedByDay.value = (sortedResponseData.parsedSchedules) as SortedResponseByDayType
+            };
+            // updateThisCookie('scheduleData', JSON.stringify(scheduleData.value));
+            // localStorage.setItem('scheduleDataSortedByDay')
+            localStorage.setItem('scheduleDataSortedByDay', JSON.stringify(scheduleDataSortedByDay.value));
             // reset reload value
             reloadData.value = false;
             return true
         }
         return false
     }
+
     Promise.resolve(fetchSchedule(monthParams.value)).then()
     watch(monthParams, async (monthParams) => {
-        document.cookie=`presentMonth=${presentMonth.value}`;
+        updateThisCookie('presentMonth', presentMonth.value)
         await fetchSchedule(monthParams)
     })
     return

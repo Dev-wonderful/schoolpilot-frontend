@@ -59,5 +59,5 @@ const closeMenu = () => {
   emit('close-menu');
 };
 const { studentDetails } = storeToRefs(useStudentPortalStore());
-const role = studentDetails.value.role ? studentDetails.value.role.toLocaleLowerCase() : staff
+const role = studentDetails.value.role ? studentDetails.value.role.toLocaleLowerCase() : 'staff'
 </script>

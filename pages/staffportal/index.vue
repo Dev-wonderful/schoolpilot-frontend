@@ -8,6 +8,7 @@
 
     const role = 'student';
     const { studentDetails } = storeToRefs(useStudentPortalStore())
+    console.log('role:', role)
     const roleState = ref(role as string)
     const matricNo = ref('');
     const password = ref('');
@@ -56,7 +57,7 @@
             })
             // console.log('loggedin response:', response)
             updateThisCookie('xToken', response.xToken)
-            localStorage.setItem('userData', JSON.stringify(response.Dashboard))
+            updateThisCookie('userData', JSON.stringify(response))
             studentDetails.value = response.Dashboard
             useDelayNavigationBriefly('/studentportal/dashboard');
         })
@@ -81,27 +82,25 @@
 </script>
 
 <template>
-    <ClientOnly>
-        <div class="flex bg-primary flex-col items-center justify-center h-screen">
-            <div class="flex flex-col items-center justify-center w-96 h-[450px] py-6 bg-white rounded-xl shadow-md">
-                <div class="flex flex-col items-center mb-10 gap-y-1 justify-center">
-                    <img src="/assets/images/GraduationCap.png" class="bg-primary w-16">
-                    <p class="font-bold text-primary">SchoolPilot</p>
-                </div>
-                <div class="flex flex-col items-center justify-center">
-                    <form @submit.prevent="onSubmit" class="flex flex-col gap-y-4 items-center justify-center">
-                        <input type="text" id="matric-no" v-model="matricNo" :placeholder="roleState === 'student' ? 'Matric Number': 'Staff ID'" required 
-                               class="focus:outline-none focus:border-[#3c005a] valid:border-green-400 invalid:border-red-400 border border-primary rounded-xl w-72 h-12 px-4">
-                        <input type="password" v-model="password" placeholder="Password" :pattern="passwordPattern" required autocomplete="current-password"
-                               class="border valid:border-green-400 invalid:border-red-400 focus:outline-none border-primary focus:border-[#3c005a] rounded-xl w-72 h-12 px-4" />
-                        <div class="clickables flex flex-col gap-1">
-                            <button type="submit" class="bg-primary rounded-xl text-white py-4 font-bold  text-2xl mb-4 w-72 text-center">Login</button>
-                            <NuxtLink :to="`/reset_password?role=${role as string}`" class="text-red-400 h10 text-xs hover:text-red-300">forgot password?</NuxtLink>
-                        </div>
-                    </form>
-                </div>
+    <div class="flex bg-primary flex-col items-center justify-center h-screen">
+        <div class="flex flex-col items-center justify-center w-96 h-[450px] py-6 bg-white rounded-xl shadow-md">
+            <div class="flex flex-col items-center mb-10 gap-y-1 justify-center">
+                <img src="/assets/images/GraduationCap.png" class="bg-primary w-16">
+                <p class="font-bold text-primary">SchoolPilot</p>
+            </div>
+            <div class="flex flex-col items-center justify-center">
+                <form @submit.prevent="onSubmit" class="flex flex-col gap-y-4 items-center justify-center">
+                    <input type="text" id="matric-no" v-model="matricNo" :placeholder="roleState === 'student' ? 'Matric Number': 'Staff ID'" required 
+                           class="focus:outline-none focus:border-[#3c005a] valid:border-green-400 invalid:border-red-400 border border-primary rounded-xl w-72 h-12 px-4">
+                    <input type="password" v-model="password" placeholder="Password" :pattern="passwordPattern" required autocomplete="current-password"
+                           class="border valid:border-green-400 invalid:border-red-400 focus:outline-none border-primary focus:border-[#3c005a] rounded-xl w-72 h-12 px-4" />
+                    <div class="clickables flex flex-col gap-1">
+                        <button type="submit" class="bg-primary rounded-xl text-white py-4 font-bold  text-2xl mb-4 w-72 text-center">Login</button>
+                        <NuxtLink :to="`/reset_password?role=${role as string}`" class="text-red-400 h10 text-xs hover:text-red-300">forgot password?</NuxtLink>
+                    </div>
+                </form>
             </div>
         </div>
-    </ClientOnly>
+    </div>
 </template>
 
