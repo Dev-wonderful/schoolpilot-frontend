@@ -10,7 +10,6 @@
     isMenuOpen.value = false;
   };
 
-  console.log('details',studentDetails.value)
 </script>
 
 <template>

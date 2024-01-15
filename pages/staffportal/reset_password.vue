@@ -64,6 +64,7 @@
                 type: 'success',
                 isLoading: false,
             })
+            // console.log('reset password:', response)
             email.value = (response as AccountActivationData)?.email;
             role.value = userRole as string
             useDelayNavigationBriefly('/set_newpassword')

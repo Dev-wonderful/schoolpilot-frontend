@@ -1,15 +1,11 @@
 <script lang="ts" setup>
-    definePageMeta({
-        layout: 'month'
-    })
     const scheduleStore = useScheduleStore()
     const { presentMonth, days, daysInMonth, scheduleDataSortedByDay } = storeToRefs(scheduleStore)
     const LEAPNUMBER = 4;
     const route = useRoute()
-    const { updatedMonth } = route.query
-    if (updatedMonth) {
-        presentMonth.value = updatedMonth as string
-        // location.replace('/schedules')
+    const { month } = route.query
+    if (month) {
+        presentMonth.value = month as string
     }
     const offsetMonth = ref(presentMonth.value)
     const DAYS = days.value;
@@ -19,17 +15,6 @@
             return scheduleDataSortedByDay.value[month]
         }
         return {}
-    // }, {
-    //     onTrack(e) {
-    //         // triggered when count.value is tracked as a dependency
-    //         console.log('track',e)
-    //         // debugger
-    //     },
-    //     onTrigger(e) {
-    //         // triggered when count.value is mutated
-    //         console.log('trigger',e)
-    //         // debugger
-    //     }
     })
     
     // Get the number of days in present month 
@@ -69,7 +54,6 @@
             i++
             if (offset) {
                 --offset;
-                
                 const pastDay = prevMonthDays - offset
                 const pastDate = `${pastDay}-${prevMonth}-${prevMonthYear}`
                 yield {day: String(pastDay), date: pastDate}
@@ -126,11 +110,11 @@
         // process and navigate to a route
         const dateArr = dateString.split('-');
         const monthAndYear = dateArr.splice(1, 2).join('-');
-        navigateTo(`/schedules/${monthAndYear}/${dateArr[0]}`)
+        navigateTo(`/studentportal/schedules/${monthAndYear}/${dateArr[0]}`)
     }
 </script>
 <template>
-    <div class="current_month w-[95%] lg:w-[87%] h-8 text-lg bg-primary rounded-md text-white mt-3 mx-auto text-center flex flex-row justify-around items-center px-auto">
+     <div class="current_month w-[95%] lg:w-[87%] h-8 text-lg bg-primary rounded-md text-white mt-3 mx-auto text-center flex flex-row justify-around items-center px-auto">
         <span class="left_arrow cursor-pointer w-10 bg-red50" @click="showPreviousMonth(presentMonth)"><i class="fa fa-chevron-left"></i></span>
         {{ presentMonth }}
         <span class="right_arrow cursor-pointer w-10 bg-red50" @click="showNextMonth(presentMonth)"><i class="fa fa-chevron-right"></i></span>
@@ -146,11 +130,10 @@
             {{ day.day }}
             <div class="activity bg-rd-50 h-[30px] sm:h-[50px] w-[100%] overflow-x-hidden overflow-y-clip flex flex-col gap-1 justify-start items-center">
                 <div class="activity_dot text-[10px] min-h-[12px] bg[#ff0000] px-1 w-full lg:w-[80%] mx-auto rounded-md leading-[10px] text-center text-white invert bgprimary roundedfull truncate"
-                     :style="{ 'background-color': schedule.scheduleColor ? schedule.scheduleColor : '#925FE2' }"
+                     :style="{ 'background-color': schedule.color ? schedule.color : '#925FE2' }"
                      v-for="schedule of scheduleByDay[day.day]?.slice(0, 3)" :title="schedule.title">
                      {{ schedule.title }}
                 </div>
-                     <!-- <div class="activity_dot h-1 w-1 bg-blue-950 rounded-full"></div> -->
                 </div>
                 <div v-if="seeMore(day.day)" class="text-[10px] text-center hover:text-primary">See more</div>
         </div>

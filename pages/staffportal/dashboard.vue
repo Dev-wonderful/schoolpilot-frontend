@@ -3,17 +3,16 @@ definePageMeta({
   middleware: 'fetch-month'
 })
 import type { 
-  StudentResponseData,
-  // DashboardUpdate, 
+  DashboardUpdate, 
   ResponseType, 
-  StudentDashboard, 
+  StaffDashboard, 
   SortedResponseByDayType, 
   SortedProjectByDay, 
 } from "~/types";
 
-  const { studentDetails, infoUpdates, avatar } = storeToRefs(useStudentPortalStore())
-  // const scheduleStore = useScheduleStore()
-  const STUDENT = computed(() => studentDetails.value as StudentDashboard)
+  const { staffDetails, infoUpdates, avatar } = storeToRefs(useStaffPortalStore())
+  const scheduleStore = useScheduleStore()
+  const STAFF = computed(() => staffDetails.value as StaffDashboard)
 
   /**
    * Sort and include the ones close to the current time
@@ -57,31 +56,23 @@ import type {
 
   // Get only the top 5
   infoUpdates.value['Upcoming Schedules'] = sortNestedScheduleObjectToArrayByClosestTime(
-    studentDetails.value?.schedules as SortedResponseByDayType
+    staffDetails.value?.schedules as SortedResponseByDayType
   ).splice(0, 5)
   infoUpdates.value['Pending Assignments'] = sortNestedProjectObjectToArrayByClosestTime(
-    studentDetails.value?.projects as SortedProjectByDay
+    staffDetails.value?.projects as SortedProjectByDay
   ).splice(0, 5)
   // watch for changes to schedule store
-  watch(studentDetails.value?.schedules as SortedResponseByDayType, (update) => {
+  watch(scheduleStore.scheduleDataSortedByDay, (update) => {
     infoUpdates.value['Upcoming Schedules'] = sortNestedScheduleObjectToArrayByClosestTime(
       update as SortedResponseByDayType
     ).splice(0, 5)
   })
 
   // fetch if this conditions are met
-  if (STUDENT.value.matricNo && (infoUpdates.value['Pending Assignments'].length === 0 || infoUpdates.value['Upcoming Schedules'].length === 0)) {
-    const requestEndpoint = `/studentportal/dashboard`
-    const { data, error } = await useMakeRequest(requestEndpoint, 'GET', undefined, true) as ResponseType<Omit<StudentResponseData, 'email'>>
-    if (error.value) console.error(error.value);
-    else {
-      /** Bug */
-      if (data.value) {
-        // studentDetails.value = {...JSON.parse(JSON.stringify(data.value))}
-        localStorage.setItem('userData', JSON.stringify(data.value.DashBoard))
-        // location.reload()
-      }
-    }
+  if (STAFF.value.staffId && (infoUpdates.value['Pending Assignments'].length === 0 && infoUpdates.value['Upcoming Schedules'].length === 0)) {
+    const requestEndpoint = `/api/v1/staffportal/dashboard`
+    const { data, error } = await useMakeRequest(requestEndpoint, 'GET', undefined, true) as ResponseType<DashboardUpdate>
+    if (error.value) console.error(error);
   }
 
   /**
@@ -119,7 +110,7 @@ import type {
       <section class="dashboard flex flex-col justify-around items-center w-[100%] min-h-[750px] gap-5 bg-prple-300 mx-auto my-[50px]">
         <div class="welcome shadow-md rounded-[20px] bg-primary text-white w-[90%] sm:w-[95%] h-[200px] flex flex-row justify-around items-center bg-blu-200">
           <h1 class="welcome_text w-[60%] h-[50%] text-left flex flex-row justify-start gap-2 items-start bg-rd-100 sm:text-[1.2rem]">
-            <strong>Hello,</strong> {{ STUDENT?.firstName }} {{ STUDENT?.lastName }}
+            <strong>Hello,</strong> {{ STAFF?.firstName }} {{ STAFF?.lastName }}
           </h1>
           <div class="image-container flex flex-col justify-center items-center w-[100px] h-[100px] sm:w-[130px] sm:h-[130px] md:w-[150px] md:h-[150px] bg-white bggray-300 rounded-[20px]">
             <img class="h-full w-full object-contain rounded-[20px] bg-center bg-cover" :src="avatar" alt="">
